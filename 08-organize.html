@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Organize an Event — DC Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream-bg: #fdf5e6;
+        --main-accent: linear-gradient(180deg, #fdf5e6 0%, #f4ead4 55%, #eee2c4 100%);
+        --sidebar-bg: #a2c2f9;
+        --sidebar-bg-deep: #96b8f5;
+        --nav-active: #5c88e5;
+        --brown-icon: #5c4033;
+        --brown-shadow: rgba(60, 40, 28, 0.55);
+        --hamburger: #2a4d8f;
+        --sidebar-width: 302px;
+        --main-pad-x: 48px;
+        --main-pad-y: 36px;
+        --font: "Montserrat", system-ui, -apple-system, sans-serif;
+        --form-blue: #1e3a5f;
+        --form-blue-soft: #2a5080;
+        --input-border: #1e3a5f;
+        --upload-tile-bg: #c5d9f7;
+        --submit-bg: #4a7fd4;
+        --submit-bg-hover: #3d6fc0;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--cream-bg);
+        color: #2a2118;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
+        display: flex;
+        flex-direction: column;
+        padding: 28px 22px 32px 24px;
+        transition: width 0.22s ease, padding 0.22s ease;
+        overflow: hidden;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      .app .sidebar:has(.sidebar__user.is-open) {
+        overflow: visible;
+      }
+
+      .sidebar__top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar {
+        width: 82px;
+        padding: 18px 12px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__top {
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__user,
+      .app.is-sidebar-collapsed .nav,
+      .app.is-sidebar-collapsed .sidebar__spacer,
+      .app.is-sidebar-collapsed .sidebar__brand {
+        display: none;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__menu-btn {
+        margin: 0;
+      }
+
+      .sidebar__user {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar__user.is-open {
+        z-index: 90;
+      }
+
+      .sidebar__user-trigger {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        margin: 0;
+        padding: 6px 8px 6px 4px;
+        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        font: inherit;
+        transition: background 0.15s ease;
+      }
+
+      .sidebar__user-trigger:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .sidebar__user-trigger:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      .sidebar__user-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar__user-text .sidebar__hello {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .sidebar__user-text .sidebar__role {
+        display: block;
+      }
+
+      .sidebar__user-chevron {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        color: #fff;
+        transition: transform 0.2s ease;
+      }
+
+      .sidebar__user-chevron svg {
+        display: block;
+      }
+
+      .sidebar__user.is-open .sidebar__user-chevron {
+        transform: rotate(180deg);
+      }
+
+      .sidebar__user-panel {
+        position: absolute;
+        left: 0;
+        right: -4px;
+        top: calc(100% + 8px);
+        z-index: 80;
+        padding: 8px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 10px 28px rgba(45, 95, 170, 0.35);
+      }
+
+      .sidebar__user-panel[hidden] {
+        display: none !important;
+      }
+
+      .sidebar__user-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        letter-spacing: 0.02em;
+        transition: background 0.15s ease;
+      }
+
+      .sidebar__user-link:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .sidebar__user-link:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 1px;
+      }
+
+      .sidebar__user-link svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        opacity: 0.95;
+      }
+
+      .sidebar__avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      .sidebar__hello {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.125rem;
+        letter-spacing: 0.01em;
+        line-height: 1.25;
+      }
+
+      .sidebar__role {
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 500;
+        font-size: 0.8125rem;
+        margin-top: 4px;
+      }
+
+      .sidebar__menu-btn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        flex-shrink: 0;
+        margin: -6px -4px 0 0;
+      }
+
+      .sidebar__menu-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .sidebar__menu-btn svg line {
+        stroke: var(--hamburger);
+        stroke-width: 2.25;
+        stroke-linecap: round;
+      }
+
+      .nav {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .nav a {
+        display: block;
+        padding: 14px 20px;
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: background 0.15s ease;
+      }
+
+      .nav a:hover:not(.is-active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .nav a.is-active {
+        background: var(--nav-active);
+        box-shadow: 0 4px 14px rgba(45, 100, 180, 0.35);
+      }
+
+      .sidebar__spacer {
+        flex: 1;
+        min-height: 24px;
+      }
+
+      .sidebar__brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-left: 4px;
+        margin-top: auto;
+      }
+
+      .sidebar__brand-mark img {
+        width: 58px;
+        height: auto;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.24));
+      }
+
+      .sidebar__brand-text {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.0625rem;
+        letter-spacing: 0.04em;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--cream-bg);
+        background-image: var(--main-accent);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #3d3530 #e8dcc8;
+      }
+
+      .main::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .main::-webkit-scrollbar-track {
+        background: #e8dcc8;
+      }
+
+      .main::-webkit-scrollbar-thumb {
+        background: #3d3530;
+        border-radius: 3px;
+      }
+
+      .organize-header {
+        padding: var(--main-pad-y) var(--main-pad-x) 12px;
+        flex-shrink: 0;
+      }
+
+      .organize-header__row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .organize-header__titles h1 {
+        font-size: clamp(1.85rem, 3.8vw, 2.65rem);
+        font-weight: 800;
+        color: #fffef8;
+        letter-spacing: 0.02em;
+        line-height: 1.12;
+        text-shadow:
+          3px 3px 0 var(--brown-shadow),
+          2px 2px 0 var(--brown-shadow),
+          0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .organize-header__titles p {
+        margin-top: 8px;
+        font-size: clamp(0.98rem, 2vw, 1.15rem);
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.95);
+        text-shadow: 2px 2px 0 rgba(60, 40, 28, 0.35), 0 1px 4px rgba(0, 0, 0, 0.12);
+      }
+
+      .main__tools {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+      }
+
+      .main__tool {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--hamburger);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+
+      .main__tool:hover {
+        background: rgba(42, 77, 143, 0.1);
+      }
+
+      .main__tool svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .organize-divider {
+        height: 1px;
+        background: var(--brown-icon);
+        opacity: 0.5;
+        margin: 18px var(--main-pad-x) 0;
+        max-width: calc(100% - 2 * var(--main-pad-x));
+      }
+
+      .main__grid-wrap {
+        padding: 22px var(--main-pad-x) 56px;
+        flex: 1;
+      }
+
+      .organize-form-shell {
+        max-width: 980px;
+      }
+
+      .form-section-label {
+        display: block;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--form-blue);
+        letter-spacing: 0.02em;
+        margin-bottom: 10px;
+      }
+
+      .form-panel {
+        border: 2px solid var(--input-border);
+        border-radius: 14px;
+        background: rgba(255, 253, 246, 0.75);
+        padding: 22px 22px 20px;
+        box-shadow: 0 4px 18px rgba(30, 58, 95, 0.08);
+      }
+
+      .field-event-name {
+        margin-bottom: 20px;
+      }
+
+      .input-text {
+        width: 100%;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #2a2118;
+        padding: 10px 14px;
+        border: 2px solid var(--input-border);
+        border-radius: 10px;
+        background: #fff;
+        outline: none;
+      }
+
+      .input-text:focus {
+        border-color: var(--nav-active);
+        box-shadow: 0 0 0 3px rgba(92, 136, 229, 0.25);
+      }
+
+      .form-flow {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 36px;
+        align-items: start;
+      }
+
+      .form-flow > .form-row {
+        min-width: 0;
+      }
+
+      .form-row--span2 {
+        grid-column: 1 / -1;
+      }
+
+      .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .course-org-inputs {
+        display: grid;
+        grid-template-columns: minmax(100px, min(38%, 200px)) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+      }
+
+      @media (max-width: 600px) {
+        .course-org-inputs {
+          grid-template-columns: 1fr;
+        }
+
+        .course-org-sep {
+          display: none;
+        }
+      }
+
+      .course-org-sep {
+        font-weight: 800;
+        color: var(--form-blue);
+        line-height: 1;
+        user-select: none;
+      }
+
+      .course-org-inputs .input-inline,
+      .course-org-inputs select.input-inline {
+        min-width: 0;
+      }
+
+      .form-row__label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--form-blue);
+        letter-spacing: 0.02em;
+      }
+
+      .form-row__label svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        color: var(--form-blue-soft);
+      }
+
+      .input-inline {
+        width: 100%;
+        font-family: inherit;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2a2118;
+        padding: 8px 12px;
+        border: 2px solid var(--input-border);
+        border-radius: 10px;
+        background: #fff;
+        outline: none;
+      }
+
+      .input-inline:focus {
+        border-color: var(--nav-active);
+      }
+
+      select.input-inline {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231e3a5f' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 36px;
+      }
+
+      .time-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .time-row input[type="time"] {
+        font-family: inherit;
+        font-size: 0.84rem;
+        font-weight: 700;
+        padding: 6px 10px;
+        border: 2px solid var(--input-border);
+        border-radius: 8px;
+        background: #fff;
+        color: #2a2118;
+        width: 100%;
+        min-width: 0;
+      }
+
+      /* Keep start & end on one horizontal row (not separated by other fields). */
+      .time-pair {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 28px;
+        width: 100%;
+        align-items: start;
+      }
+
+      @media (max-width: 480px) {
+        .time-pair {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .muted-hint {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #4a5568;
+        margin-top: 2px;
+      }
+
+      .upload-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(30, 58, 95, 0.15);
+      }
+
+      .upload-tile {
+        position: relative;
+        border: none;
+        border-radius: 12px;
+        min-height: 118px;
+        background: var(--upload-tile-bg);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 8px;
+        font-family: inherit;
+        transition: filter 0.15s ease, transform 0.15s ease;
+      }
+
+      .upload-tile:hover {
+        filter: brightness(1.03);
+        transform: translateY(-1px);
+      }
+
+      .upload-tile:focus-visible {
+        outline: 2px solid var(--nav-active);
+        outline-offset: 2px;
+      }
+
+      .upload-tile__plus {
+        width: 38px;
+        height: 38px;
+        color: var(--form-blue);
+        stroke-width: 2.4;
+      }
+
+      .upload-tile__text {
+        font-size: 0.62rem;
+        font-weight: 800;
+        color: var(--form-blue);
+        text-align: center;
+        line-height: 1.3;
+        letter-spacing: 0.03em;
+        max-width: 100%;
+      }
+
+      .upload-tile input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 22px;
+      }
+
+      .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 12px;
+        background: var(--submit-bg);
+        box-shadow: 0 3px 0 rgba(30, 60, 120, 0.35);
+        transition: background 0.15s ease, transform 0.15s ease;
+      }
+
+      .btn-submit:hover {
+        background: var(--submit-bg-hover);
+      }
+
+      .btn-submit:active {
+        transform: translateY(1px);
+      }
+
+      .btn-submit svg {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+      }
+
+      /* Only collapse the main form to one column on narrow phones — keeps
+         School | Department and paired times side-by-side on tablets/laptops. */
+      @media (max-width: 640px) {
+        .form-flow {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row--span2 {
+          grid-column: 1;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .upload-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 960px) {
+        .app {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          padding: 20px;
+        }
+
+        .sidebar__top {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+
+        .nav {
+          flex-direction: row;
+          flex-wrap: wrap;
+          width: 100%;
+        }
+
+        .nav a {
+          padding: 10px 16px;
+        }
+
+        .sidebar__spacer {
+          display: none;
+        }
+
+        .sidebar__brand {
+          width: 100%;
+          margin-top: 20px;
+        }
+
+        :root {
+          --main-pad-x: 24px;
+        }
+
+        .organize-divider {
+          margin-left: var(--main-pad-x);
+          margin-right: var(--main-pad-x);
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .upload-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Primary">
+        <div class="sidebar__top">
+          <div class="sidebar__user">
+            <button
+              type="button"
+              class="sidebar__user-trigger"
+              id="sidebar-user-trigger"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="sidebar-user-menu"
+            >
+              <img
+                class="sidebar__avatar"
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=128&h=128&fit=crop&crop=faces"
+                width="56"
+                height="56"
+                alt="Misxa profile photo"
+              />
+              <span class="sidebar__user-text">
+                <span class="sidebar__hello">Hello, Misxa!</span>
+                <span class="sidebar__role">Faculty</span>
+              </span>
+              <span class="sidebar__user-chevron" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
+            <div id="sidebar-user-menu" class="sidebar__user-panel" role="menu" hidden>
+              <a class="sidebar__user-link" role="menuitem" href="#">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z" />
+                </svg>
+                My Profile
+              </a>
+              <a class="sidebar__user-link" role="menuitem" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M4 12h11" />
+                </svg>
+                Log out
+              </a>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="sidebar__menu-btn"
+            aria-label="Toggle navigation"
+            aria-expanded="true"
+            aria-controls="left-navigation"
+          >
+            <svg width="24" height="18" viewBox="0 0 24 18" fill="none" aria-hidden="true">
+              <line x1="2" y1="2" x2="22" y2="2" />
+              <line x1="2" y1="9" x2="22" y2="9" />
+              <line x1="2" y1="16" x2="22" y2="16" />
+            </svg>
+          </button>
+        </div>
+
+        <nav id="left-navigation" aria-label="Main navigation">
+          <ul class="nav">
+            <li><a href="./02-dashboard.html">Dashboard</a></li>
+            <li><a href="./04-events.html">Events</a></li>
+            <li><a href="./06-attendance.html">Attendance</a></li>
+            <li><a href="./07-certificates.html">Certificates</a></li>
+            <li><a class="is-active" href="./08-organize.html" aria-current="page">Organize</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__spacer"></div>
+
+        <div class="sidebar__brand">
+          <div class="sidebar__brand-mark" aria-hidden="true">
+            <img src="./assets/logo-dc-space.png" alt="" />
+          </div>
+          <span class="sidebar__brand-text">DC Space</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="organize-header">
+          <div class="organize-header__row">
+            <div class="organize-header__titles">
+              <h1>Organize an Event!</h1>
+              <p>Create New Event</p>
+            </div>
+            <div class="main__tools">
+              <button type="button" class="main__tool" aria-label="Copy template">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" aria-hidden="true">
+                  <path
+                    stroke-linejoin="round"
+                    d="M8 6h10a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z"
+                  />
+                  <path
+                    stroke-linejoin="round"
+                    d="M6 4H5a2 2 0 00-2 2v11a2 2 0 002 2h1"
+                  />
+                  <path stroke-linecap="round" d="M10 10h6M10 14h6" />
+                </svg>
+              </button>
+              <button type="button" class="main__tool" aria-label="Refresh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-2.64-6.36" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 3v6h-6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </header>
+        <div class="organize-divider" role="presentation"></div>
+
+        <div class="main__grid-wrap">
+          <form class="organize-form-shell" action="#" method="post" aria-label="Create new event">
+            <label class="form-section-label" for="event-name">Event Name</label>
+            <div class="form-panel">
+              <div class="field-event-name">
+                <input
+                  class="input-text"
+                  id="event-name"
+                  name="event_name"
+                  type="text"
+                  placeholder="Enter event name"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+
+              <div class="form-flow">
+                <div class="form-row">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <rect x="3" y="5" width="18" height="16" rx="2" />
+                      <path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round" />
+                    </svg>
+                    Date:
+                  </span>
+                  <input class="input-inline" type="date" name="event_date" />
+                </div>
+
+                <div class="form-row">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path
+                        d="M12 21s7-4.35 7-10a7 7 0 10-14 0c0 5.65 7 10 7 10Z"
+                        stroke-linejoin="round"
+                      />
+                      <circle cx="12" cy="11" r="2.5" />
+                    </svg>
+                    Venue:
+                  </span>
+                  <input class="input-inline" type="text" name="venue" placeholder="Location" />
+                </div>
+
+                <div class="form-row form-row--span2">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M5 4h14v16H5V4z" stroke-linejoin="round" />
+                      <path d="M9 8h6M9 12h6M9 16h4" stroke-linecap="round" />
+                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <circle cx="12" cy="9" r="4" />
+                      <path d="M6 21v-1a6 6 0 0112 0v1" stroke-linecap="round" />
+                    </svg>
+                    Course &amp; Requesting Organizer:
+                  </span>
+                  <div class="course-org-inputs">
+                    <select class="input-inline" id="course-code" name="course_code" aria-label="Course program">
+                      <option value="">Select course</option>
+                      <option value="BSIT">BSIT — BS Information Technology</option>
+                      <option value="BMMA">BMMA — Bachelor of Multimedia Arts</option>
+                      <option value="BACOMM">BACOMM — BA Communication</option>
+                      <option value="BSRT">BSRT — BS Radiologic Technology</option>
+                      <option value="BSPT">BSPT — BS Physical Therapy</option>
+                      <option value="BSBIO">BSB — BS Biology</option>
+                      <option value="BSPHARMA">BSPh — BS Pharmacy</option>
+                      <option value="BSA">BSA — BS Accountancy</option>
+                      <option value="BSBA">BSBA — BS Business Administration</option>
+                      <option value="BSHM">BSHM — BS Hospitality Management</option>
+                      <option value="BSTM">BSTM — BS Tourism Management</option>
+                      <option value="BSN">BSN — BS Nursing</option>
+                      <option value="BSMT">BSMT — BS Medical Technology</option>
+                      <option value="BSED">BSED — Bachelor of Secondary Education</option>
+                      <option value="BEED">BEED — Bachelor of Elementary Education</option>
+                    </select>
+                    <span class="course-org-sep" aria-hidden="true">—</span>
+                    <input
+                      class="input-inline"
+                      id="organizer-name"
+                      name="organizer_name"
+                      type="text"
+                      placeholder="Org name e.g. DOMINIXODE"
+                      autocomplete="organization"
+                      aria-label="Requesting organizer or organization name"
+                    />
+                  </div>
+                  <span class="muted-hint">Displays together as <strong>BSIT-DOMINIXODE</strong> (course code + organizer).</span>
+                  <input type="hidden" id="course-organizer-combined" name="course_organizer_combined" value="" />
+                </div>
+
+                <div class="form-row">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M4 21V8l8-4 8 4v13" stroke-linejoin="round" />
+                      <path d="M4 12h16M9 12v9M15 12v9" stroke-linejoin="round" />
+                    </svg>
+                    School:
+                  </span>
+                  <select class="input-inline" name="school">
+                    <option value="">Select school</option>
+                    <option value="main">Main campus</option>
+                    <option value="annex">Annex</option>
+                  </select>
+                </div>
+
+                <div class="form-row">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M4 7h6v10H4V7zm10 3h6v7h-6v-7zM4 20h16v2H4v-2z" stroke-linejoin="round" />
+                    </svg>
+                    Department:
+                  </span>
+                  <select class="input-inline" name="department" aria-label="Department">
+                    <option value="">Select department</option>
+                    <option value="SASE">SASE</option>
+                    <option value="SCMCS">SCMCS</option>
+                    <option value="SIHTM">SIHTM</option>
+                    <option value="SMLS">SMLS</option>
+                    <option value="SNAHS">SNAHS</option>
+                  </select>
+                </div>
+
+                <div class="form-row form-row--span2">
+                  <div class="time-pair">
+                    <div class="form-row">
+                      <span class="form-row__label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <circle cx="12" cy="12" r="8" />
+                          <path d="M12 8v4l3 2" stroke-linecap="round" />
+                        </svg>
+                        Start Time:
+                      </span>
+                      <div class="time-row">
+                        <input type="time" name="start_time" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <span class="form-row__label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <circle cx="12" cy="12" r="8" />
+                          <path d="M12 8v4l3 2" stroke-linecap="round" />
+                        </svg>
+                        End Time:
+                      </span>
+                      <div class="time-row">
+                        <input type="time" name="end_time" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row form-row--span2">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <circle cx="9" cy="9" r="3" />
+                      <circle cx="15" cy="9" r="3" />
+                      <path d="M3 18c0-3 4-5 9-5s9 2 9 5" stroke-linecap="round" />
+                    </svg>
+                    Type of Event:
+                  </span>
+                  <input class="input-inline" type="text" name="event_type" placeholder="Workshop, seminar..." />
+                </div>
+
+                <div class="form-row form-row--span2">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v6l4 2" stroke-linecap="round" />
+                    </svg>
+                    Total Time Duration:
+                  </span>
+                  <input class="input-inline" type="text" name="duration" placeholder="e.g. 3 hours" />
+                </div>
+
+                <div class="form-row form-row--span2">
+                  <span class="form-row__label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M8 12l2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Minimum Attendance Time Required:
+                  </span>
+                  <input class="input-inline" type="text" name="min_attendance" value="None / 0 Hours / TBA" />
+                  <span class="muted-hint">Edit as needed (None, 0 Hours, or TBA).</span>
+                </div>
+              </div>
+
+              <div class="upload-grid">
+                <label class="upload-tile">
+                  <svg class="upload-tile__plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                  </svg>
+                  <span class="upload-tile__text">Add Poster/Pubmat</span>
+                  <input type="file" name="poster" accept="image/*,.pdf" />
+                </label>
+                <label class="upload-tile">
+                  <svg class="upload-tile__plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                  </svg>
+                  <span class="upload-tile__text">Add Registration Form</span>
+                  <input type="file" name="registration" accept=".pdf,.doc,.docx" />
+                </label>
+                <label class="upload-tile">
+                  <svg class="upload-tile__plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                  </svg>
+                  <span class="upload-tile__text">Add Survey Form</span>
+                  <input type="file" name="survey" accept=".pdf,.doc,.docx" />
+                </label>
+                <label class="upload-tile">
+                  <svg class="upload-tile__plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                  </svg>
+                  <span class="upload-tile__text">Add E-Certificate Template</span>
+                  <input type="file" name="certificate_template" accept=".pdf,.doc,.docx" />
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                  Submit
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2" />
+                    <path
+                      d="M8 12l2.5 3L16 10"
+                      stroke="#fff"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+    <script>
+      (function () {
+        var app = document.querySelector(".app");
+        var toggleButton = document.querySelector(".sidebar__menu-btn");
+        if (!app || !toggleButton) return;
+
+        toggleButton.addEventListener("click", function () {
+          var isCollapsed = app.classList.toggle("is-sidebar-collapsed");
+          toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
+        });
+      })();
+
+      (function () {
+        var root = document.querySelector(".sidebar__user");
+        var btn = document.querySelector(".sidebar__user-trigger");
+        var panel = document.getElementById("sidebar-user-menu");
+        var menuToggle = document.querySelector(".sidebar__menu-btn");
+        if (!root || !btn || !panel) return;
+
+        function closeMenu() {
+          root.classList.remove("is-open");
+          btn.setAttribute("aria-expanded", "false");
+          panel.hidden = true;
+        }
+
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var open = !root.classList.contains("is-open");
+          root.classList.toggle("is-open", open);
+          btn.setAttribute("aria-expanded", String(open));
+          panel.hidden = !open;
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!root.contains(e.target)) closeMenu();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeMenu();
+        });
+
+        if (menuToggle) menuToggle.addEventListener("click", closeMenu);
+      })();
+
+      (function () {
+        var course = document.getElementById("course-code");
+        var org = document.getElementById("organizer-name");
+        var combined = document.getElementById("course-organizer-combined");
+        if (!course || !org || !combined) return;
+
+        function syncCombined() {
+          var c = (course.value || "").trim();
+          var o = (org.value || "").trim().replace(/^[\s—-]+|[\s—-]+$/g, "");
+          combined.value = c && o ? c + "-" + o : c || o || "";
+        }
+
+        course.addEventListener("change", syncCombined);
+        org.addEventListener("input", syncCombined);
+        syncCombined();
+      })();
+    </script>
+  </body>
+</html>

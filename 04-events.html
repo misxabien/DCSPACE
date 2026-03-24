@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Events — DC Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream-bg: #fdf5e6;
+        --sidebar-bg: #a2c2f9;
+        --sidebar-bg-deep: #96b8f5;
+        --nav-active: #5c88e5;
+        --gold-text: #c5a059;
+        --gold-border: #c9a84a;
+        --brown-icon: #5c4033;
+        --brown-shadow: rgba(60, 40, 28, 0.55);
+        --hamburger: #2a4d8f;
+        --sidebar-width: 302px;
+        --main-pad-x: 48px;
+        --main-pad-y: 36px;
+        --font: "Montserrat", system-ui, -apple-system, sans-serif;
+        --card-radius: 14px;
+        --card-cream: #faf6ec;
+        --grid-gap: 30px;
+        --pubmat-bg: #eed9b1;
+        --pubmat-bg-deep: #e5cf9e;
+        --pubmat-text: #8a6a2a;
+        --card-body-panel: #fff9f0;
+        --btn-gold: #e8c86a;
+        --btn-gold-border: #c9a84a;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--cream-bg);
+        color: #2a2118;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
+        display: flex;
+        flex-direction: column;
+        padding: 28px 22px 32px 24px;
+        transition: width 0.22s ease, padding 0.22s ease;
+        overflow: hidden;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      .app .sidebar:has(.sidebar__user.is-open) {
+        overflow: visible;
+      }
+
+      .sidebar__top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar {
+        width: 82px;
+        padding: 18px 12px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__top {
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__user,
+      .app.is-sidebar-collapsed .nav,
+      .app.is-sidebar-collapsed .sidebar__spacer,
+      .app.is-sidebar-collapsed .sidebar__brand {
+        display: none;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__menu-btn {
+        margin: 0;
+      }
+
+      .sidebar__user {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar__user.is-open {
+        z-index: 90;
+      }
+
+      .sidebar__user-trigger {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        margin: 0;
+        padding: 6px 8px 6px 4px;
+        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        font: inherit;
+        transition: background 0.15s ease;
+      }
+
+      .sidebar__user-trigger:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .sidebar__user-trigger:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      .sidebar__user-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar__user-text .sidebar__hello {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .sidebar__user-text .sidebar__role {
+        display: block;
+      }
+
+      .sidebar__user-chevron {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        color: #fff;
+        transition: transform 0.2s ease;
+      }
+
+      .sidebar__user-chevron svg {
+        display: block;
+      }
+
+      .sidebar__user.is-open .sidebar__user-chevron {
+        transform: rotate(180deg);
+      }
+
+      .sidebar__user-panel {
+        position: absolute;
+        left: 0;
+        right: -4px;
+        top: calc(100% + 8px);
+        z-index: 80;
+        padding: 8px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 10px 28px rgba(45, 95, 170, 0.35);
+      }
+
+      .sidebar__user-panel[hidden] {
+        display: none !important;
+      }
+
+      .sidebar__user-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        letter-spacing: 0.02em;
+        transition: background 0.15s ease;
+      }
+
+      .sidebar__user-link:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .sidebar__user-link:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 1px;
+      }
+
+      .sidebar__user-link svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        opacity: 0.95;
+      }
+
+      .sidebar__avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      .sidebar__hello {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.125rem;
+        letter-spacing: 0.01em;
+        line-height: 1.25;
+      }
+
+      .sidebar__role {
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 500;
+        font-size: 0.8125rem;
+        margin-top: 4px;
+      }
+
+      .sidebar__menu-btn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        flex-shrink: 0;
+        margin: -6px -4px 0 0;
+      }
+
+      .sidebar__menu-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .sidebar__menu-btn svg line {
+        stroke: var(--hamburger);
+        stroke-width: 2.25;
+        stroke-linecap: round;
+      }
+
+      .nav {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .nav a {
+        display: block;
+        padding: 14px 20px;
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: background 0.15s ease;
+      }
+
+      .nav a:hover:not(.is-active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .nav a.is-active {
+        background: var(--nav-active);
+        box-shadow: 0 4px 14px rgba(45, 100, 180, 0.35);
+      }
+
+      .sidebar__spacer {
+        flex: 1;
+        min-height: 24px;
+      }
+
+      .sidebar__brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-left: 4px;
+        margin-top: auto;
+      }
+
+      .sidebar__brand-mark img {
+        width: 58px;
+        height: auto;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.24));
+      }
+
+      .sidebar__brand-text {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.0625rem;
+        letter-spacing: 0.04em;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--cream-bg);
+      }
+
+      .main__header {
+        padding: var(--main-pad-y) var(--main-pad-x) 16px;
+        flex-shrink: 0;
+      }
+
+      .main__header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .main__title {
+        font-size: clamp(2rem, 4.2vw, 2.75rem);
+        font-weight: 800;
+        color: #fffef8;
+        letter-spacing: 0.02em;
+        line-height: 1.1;
+        text-shadow:
+          3px 3px 0 var(--brown-shadow),
+          2px 2px 0 var(--brown-shadow),
+          1px 1px 0 rgba(60, 40, 28, 0.35);
+      }
+
+      .main__tools {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-shrink: 0;
+      }
+
+      .main__tool {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--brown-icon);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+
+      .main__tool:hover {
+        background: rgba(92, 64, 51, 0.08);
+      }
+
+      .main__tool svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .main__divider {
+        height: 1px;
+        background: var(--brown-icon);
+        opacity: 0.55;
+        margin-top: 20px;
+        max-width: 100%;
+      }
+
+      .main__detail-wrap {
+        padding: 18px var(--main-pad-x) 48px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #3d3530 #e8dcc8;
+        flex: 1;
+        min-width: 0;
+        width: 100%;
+        container-type: inline-size;
+        container-name: events-main;
+      }
+
+      .main__detail-wrap::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .main__detail-wrap::-webkit-scrollbar-track {
+        background: #e8dcc8;
+      }
+
+      .main__detail-wrap::-webkit-scrollbar-thumb {
+        background: #3d3530;
+        border-radius: 3px;
+      }
+
+      .search {
+        height: 40px;
+        max-width: 100%;
+        border: 1px solid rgba(180, 155, 115, 0.55);
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 12px;
+        color: #8a7348;
+        background: rgba(255, 253, 246, 0.85);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      }
+
+      .search svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        opacity: 0.85;
+      }
+
+      .search input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: inherit;
+        color: #4a4036;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .search input::placeholder {
+        color: #a89472;
+        font-weight: 600;
+      }
+
+      .clear-btn {
+        width: 26px;
+        height: 26px;
+        border: 1px solid rgba(180, 155, 115, 0.55);
+        border-radius: 50%;
+        background: rgba(255, 253, 246, 0.75);
+        color: #8a7348;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        line-height: 1;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .list {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--grid-gap);
+        max-width: 1120px;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .event-card {
+        position: relative;
+        border-radius: var(--card-radius);
+        border: none;
+        box-shadow: 4px 6px 0 rgba(60, 40, 28, 0.08), 8px 12px 24px rgba(60, 40, 28, 0.06);
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        min-height: 168px;
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        background: var(--card-cream);
+      }
+
+      .event-card--cream {
+        background: var(--card-cream);
+      }
+
+      .event-card--cream .event-card__media {
+        background: linear-gradient(180deg, var(--pubmat-bg) 0%, var(--pubmat-bg-deep) 100%);
+        color: var(--pubmat-text);
+      }
+
+      .event-card--cream .event-name {
+        color: #3e2723;
+      }
+
+      .event-card--cream .event-meta {
+        color: #4a4036;
+      }
+
+      .event-card--white {
+        background: var(--card-cream);
+        box-shadow: 4px 6px 0 rgba(60, 40, 28, 0.08), 8px 12px 24px rgba(60, 40, 28, 0.06);
+      }
+
+      .event-card--white .event-card__media {
+        background: linear-gradient(180deg, #f3e2bc 0%, #e8d4a8 100%);
+        color: #9a7328;
+      }
+
+      .event-card--white .event-name {
+        color: #3e2723;
+      }
+
+      .event-card--white .event-meta {
+        color: #4a4036;
+      }
+
+      .event-card__media {
+        flex: 0 1 38%;
+        min-width: 0;
+        max-width: min(200px, 40%);
+        min-height: 168px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8125rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: lowercase;
+      }
+
+      .event-card__body {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+        padding: clamp(12px, 2.8vw, 1.375rem) clamp(12px, 2.8vw, 1.25rem) clamp(12px, 2.5vw, 1.125rem);
+        /* Reserve space for the bookmark on the top-right. */
+        padding-right: clamp(2.25rem, 7vw, 2.75rem);
+        background: var(--card-body-panel);
+        overflow-wrap: anywhere;
+        word-wrap: break-word;
+      }
+
+      .event-name {
+        margin: 0 0 0.5rem;
+        padding-right: 0.25rem;
+        font-size: clamp(1.05rem, 2.5vw, 1.28rem);
+        font-weight: 800;
+        line-height: 1.25;
+        letter-spacing: 0.01em;
+        color: #3e2723;
+      }
+
+      .event-meta {
+        margin: 0;
+        font-size: clamp(0.875rem, 1.9vw, 1rem);
+        font-weight: 500;
+        line-height: 1.5;
+        letter-spacing: 0.01em;
+        color: #4a4036;
+      }
+
+      .event-meta + .event-meta {
+        margin-top: 0.28rem;
+      }
+
+      /* Narrow main column (e.g. sidebar open): stack cards instead of cramped two-column grid */
+      @container events-main (max-width: 680px) {
+        .list {
+          grid-template-columns: 1fr;
+        }
+
+        .event-card {
+          flex-direction: column;
+        }
+
+        .event-card__media {
+          flex: none;
+          width: 100%;
+          max-width: none;
+          min-height: 130px;
+        }
+
+        .event-card__body {
+          padding-right: clamp(2.1rem, 6vw, 2.5rem);
+        }
+      }
+
+      .bookmark {
+        position: absolute;
+        top: clamp(10px, 2.2vw, 1.125rem);
+        right: clamp(10px, 2.2vw, 1.125rem);
+        width: clamp(16px, 4.25vw, 26px);
+        height: auto;
+        aspect-ratio: 16 / 20;
+        flex-shrink: 0;
+        display: block;
+        overflow: visible;
+        border: none;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        font: inherit;
+        cursor: pointer;
+        z-index: 2;
+        line-height: 0;
+        transition: transform 0.18s ease, opacity 0.18s ease;
+      }
+
+      .bookmark svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .bookmark:hover {
+        transform: scale(1.08);
+      }
+
+      .bookmark:active {
+        transform: scale(0.98);
+      }
+
+      .bookmark:focus-visible {
+        outline: 2px solid #5c88e5;
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .bookmark--outline svg path {
+        fill: none;
+        stroke: #b8964e;
+        stroke-width: 1.5;
+      }
+
+      .bookmark--solid svg path {
+        fill: #ebc971;
+        stroke: #b8964e;
+        stroke-width: 0.75;
+      }
+
+      .event-card__cta {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: clamp(6px, 1.5vw, 8px);
+        border-radius: 999px;
+        padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 22px) clamp(8px, 2vw, 10px) clamp(18px, 4vw, 22px);
+        font-family: inherit;
+        font-size: clamp(0.75rem, 1.85vw, 0.8125rem);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          border-color 0.18s ease,
+          background 0.18s ease,
+          color 0.18s ease;
+        flex-shrink: 0;
+        max-width: 100%;
+      }
+
+      .event-card__actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        margin-top: auto;
+        padding-top: clamp(0.65rem, 2vw, 0.85rem);
+        flex-shrink: 0;
+      }
+
+      .event-card__cta svg {
+        width: clamp(14px, 3.5vw, 18px);
+        height: clamp(14px, 3.5vw, 18px);
+        flex-shrink: 0;
+      }
+
+      .event-card--cream .event-card__cta,
+      .event-card--white .event-card__cta,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta {
+        color: #2a2118;
+        background: linear-gradient(180deg, #f0d578 0%, var(--btn-gold) 100%);
+        border: 1px solid var(--btn-gold-border);
+        box-shadow: 0 2px 0 rgba(160, 120, 50, 0.2);
+      }
+
+      .event-card--cream .event-card__cta svg,
+      .event-card--white .event-card__cta svg,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta svg {
+        stroke: #3d3020;
+      }
+
+      /* Hover / focus: Figma “sticker” — black hairline, warm gold, cream halo */
+      .event-card--cream .event-card__cta:hover,
+      .event-card--cream .event-card__cta:focus-visible,
+      .event-card--white .event-card__cta:hover,
+      .event-card--white .event-card__cta:focus-visible,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta:hover,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta:focus-visible {
+        color: #141008;
+        background: linear-gradient(180deg, #f8dc8a 0%, #ebc971 52%, #e3b44a 100%);
+        border: 1px solid #141414;
+        box-shadow:
+          0 0 0 1px rgba(255, 250, 240, 0.98),
+          0 2px 0 rgba(20, 14, 6, 0.22),
+          0 4px 12px rgba(0, 0, 0, 0.08);
+        outline: none;
+        transform: translateY(-1px);
+      }
+
+      .event-card--cream .event-card__cta:hover svg,
+      .event-card--cream .event-card__cta:focus-visible svg,
+      .event-card--white .event-card__cta:hover svg,
+      .event-card--white .event-card__cta:focus-visible svg,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta:hover svg,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta:focus-visible svg {
+        stroke: #141008;
+      }
+
+      .event-card--cream .event-card__cta:active,
+      .event-card--white .event-card__cta:active,
+      .app.is-sidebar-collapsed .event-card--cream .event-card__cta:active {
+        transform: translateY(0);
+        box-shadow:
+          0 0 0 1px rgba(255, 250, 240, 0.95),
+          0 1px 0 rgba(20, 14, 6, 0.28);
+      }
+
+      @container events-main (max-width: 680px) {
+        .bookmark {
+          top: clamp(10px, 2.2vw, 1rem);
+          right: clamp(10px, 2.2vw, 1rem);
+        }
+      }
+
+      .cta__label--join {
+        display: none;
+      }
+
+      .app.is-sidebar-collapsed .cta__label--details {
+        display: none;
+      }
+
+      .app.is-sidebar-collapsed .cta__label--join {
+        display: inline;
+      }
+
+      @media (max-width: 900px) {
+        .list {
+          grid-template-columns: 1fr;
+        }
+
+        .event-card {
+          flex-direction: column;
+        }
+
+        .event-card__media {
+          flex: none;
+          max-width: none;
+          width: 100%;
+          min-height: 140px;
+        }
+
+        .event-card__body {
+          padding: clamp(12px, 2.5vw, 1.125rem) clamp(12px, 2.5vw, 1.125rem);
+          padding-right: clamp(2.5rem, 9vw, 3rem);
+        }
+      }
+
+      @media (max-width: 640px) {
+        :root {
+          --main-pad-x: 22px;
+          --main-pad-y: 24px;
+        }
+      }
+
+      /* When the sidebar is collapsed, the card body becomes wider.
+         Reduce the right inset so the CTA (Join/View Details) shifts right. */
+      .app.is-sidebar-collapsed .event-card__body {
+        padding-right: clamp(2.05rem, 6vw, 2.35rem);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Primary">
+        <div class="sidebar__top">
+          <div class="sidebar__user">
+            <button
+              type="button"
+              class="sidebar__user-trigger"
+              id="sidebar-user-trigger"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="sidebar-user-menu"
+            >
+              <img
+                class="sidebar__avatar"
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=128&h=128&fit=crop&crop=faces"
+                width="56"
+                height="56"
+                alt="Misxa profile photo"
+              />
+              <span class="sidebar__user-text">
+                <span class="sidebar__hello">Hello, Misxa!</span>
+                <span class="sidebar__role">Faculty</span>
+              </span>
+              <span class="sidebar__user-chevron" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
+            <div id="sidebar-user-menu" class="sidebar__user-panel" role="menu" hidden>
+              <a class="sidebar__user-link" role="menuitem" href="#">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z" />
+                </svg>
+                My Profile
+              </a>
+              <a class="sidebar__user-link" role="menuitem" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M4 12h11" />
+                </svg>
+                Log out
+              </a>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="sidebar__menu-btn"
+            aria-label="Toggle navigation"
+            aria-expanded="true"
+            aria-controls="left-navigation"
+          >
+            <svg width="24" height="18" viewBox="0 0 24 18" fill="none" aria-hidden="true">
+              <line x1="2" y1="2" x2="22" y2="2" />
+              <line x1="2" y1="9" x2="22" y2="9" />
+              <line x1="2" y1="16" x2="22" y2="16" />
+            </svg>
+          </button>
+        </div>
+
+        <nav id="left-navigation" aria-label="Main navigation">
+          <ul class="nav">
+            <li><a href="./02-dashboard.html">Dashboard</a></li>
+            <li><a class="is-active" href="./04-events.html" aria-current="page">Events</a></li>
+            <li><a href="./06-attendance.html">Attendance</a></li>
+            <li><a href="./07-certificates.html">Certificates</a></li>
+            <li><a href="./08-organize.html">Organize</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__spacer"></div>
+
+        <div class="sidebar__brand">
+          <div class="sidebar__brand-mark" aria-hidden="true">
+            <img src="./assets/logo-dc-space.png" alt="" />
+          </div>
+          <span class="sidebar__brand-text">DC Space</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="main__header">
+          <div class="main__header-row">
+            <h1 class="main__title">Browse Events</h1>
+            <div class="main__tools">
+              <button type="button" class="main__tool" aria-label="Layout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="4" y="4" width="7" height="7" rx="1.5" />
+                  <rect x="13" y="4" width="7" height="7" rx="1.5" />
+                  <rect x="4" y="13" width="7" height="7" rx="1.5" />
+                  <rect x="13" y="13" width="7" height="7" rx="1.5" />
+                </svg>
+              </button>
+              <button type="button" class="main__tool" aria-label="Refresh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-2.64-6.36" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 3v6h-6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="main__divider" role="presentation"></div>
+        </header>
+
+        <section class="main__detail-wrap">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20L16.6 16.6" stroke-linecap="round" />
+            </svg>
+            <input type="search" name="q" placeholder="Search Event" aria-label="Search event" autocomplete="off" />
+            <button class="clear-btn" type="button" aria-label="Clear search">×</button>
+          </div>
+
+          <div class="list">
+            <article class="event-card event-card--cream" data-event-id="evt-1">
+              <div class="event-card__media" role="img" aria-label="Event publication material placeholder">
+                or pubmat
+              </div>
+              <div class="event-card__body">
+                <button
+                  type="button"
+                  class="bookmark bookmark--outline"
+                  data-event-id="evt-1"
+                  aria-pressed="false"
+                  aria-label="Save event to dashboard"
+                  title="Save event"
+                >
+                  <svg viewBox="0 0 16 20" fill="none" aria-hidden="true">
+                    <path d="M3 2H13V18L8 14.7L3 18V2Z" />
+                  </svg>
+                </button>
+                <h2 class="event-name">Event Name</h2>
+                <p class="event-meta">Event Date and Time</p>
+                <p class="event-meta">Event Venue</p>
+                <p class="event-meta">Event Representative or Organizer</p>
+                <div class="event-card__actions">
+                  <button class="event-card__cta" type="button">
+                    <span class="cta__label--details">View Details</span>
+                    <span class="cta__label--join">Join</span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 6l6 6-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="event-card event-card--white" data-event-id="evt-2">
+              <div class="event-card__media" role="img" aria-label="Event publication material placeholder">
+                or pubmat
+              </div>
+              <div class="event-card__body">
+                <button
+                  type="button"
+                  class="bookmark bookmark--outline"
+                  data-event-id="evt-2"
+                  aria-pressed="false"
+                  aria-label="Save event to dashboard"
+                  title="Save event"
+                >
+                  <svg viewBox="0 0 16 20" fill="none" aria-hidden="true">
+                    <path d="M3 2H13V18L8 14.7L3 18V2Z" />
+                  </svg>
+                </button>
+                <h2 class="event-name">Event Name</h2>
+                <p class="event-meta">Event Date and Time</p>
+                <p class="event-meta">Event Venue</p>
+                <p class="event-meta">Event Representative or Organizer</p>
+                <div class="event-card__actions">
+                  <button class="event-card__cta" type="button">
+                    <span class="cta__label--details">View Details</span>
+                    <span class="cta__label--join">Join</span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 6l6 6-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="event-card event-card--cream" data-event-id="evt-3">
+              <div class="event-card__media">or pubmat</div>
+              <div class="event-card__body">
+                <button
+                  type="button"
+                  class="bookmark bookmark--outline"
+                  data-event-id="evt-3"
+                  aria-pressed="false"
+                  aria-label="Save event to dashboard"
+                  title="Save event"
+                >
+                  <svg viewBox="0 0 16 20" fill="none" aria-hidden="true">
+                    <path d="M3 2H13V18L8 14.7L3 18V2Z" />
+                  </svg>
+                </button>
+                <h2 class="event-name">Event Name</h2>
+                <p class="event-meta">Event Date and Time</p>
+                <p class="event-meta">Event Venue</p>
+                <p class="event-meta">Event Representative or Organizer</p>
+                <div class="event-card__actions">
+                  <button class="event-card__cta" type="button">
+                    <span class="cta__label--details">View Details</span>
+                    <span class="cta__label--join">Join</span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 6l6 6-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="event-card event-card--white" data-event-id="evt-4">
+              <div class="event-card__media">or pubmat</div>
+              <div class="event-card__body">
+                <button
+                  type="button"
+                  class="bookmark bookmark--outline"
+                  data-event-id="evt-4"
+                  aria-pressed="false"
+                  aria-label="Save event to dashboard"
+                  title="Save event"
+                >
+                  <svg viewBox="0 0 16 20" fill="none" aria-hidden="true">
+                    <path d="M3 2H13V18L8 14.7L3 18V2Z" />
+                  </svg>
+                </button>
+                <h2 class="event-name">Event Name</h2>
+                <p class="event-meta">Event Date and Time</p>
+                <p class="event-meta">Event Venue</p>
+                <p class="event-meta">Event Representative or Organizer</p>
+                <div class="event-card__actions">
+                  <button class="event-card__cta" type="button">
+                    <span class="cta__label--details">View Details</span>
+                    <span class="cta__label--join">Join</span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 6l6 6-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      (function () {
+        var app = document.querySelector(".app");
+        var toggleButton = document.querySelector(".sidebar__menu-btn");
+        if (!app || !toggleButton) return;
+
+        toggleButton.addEventListener("click", function () {
+          var isCollapsed = app.classList.toggle("is-sidebar-collapsed");
+          toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
+        });
+      })();
+
+      (function () {
+        var root = document.querySelector(".sidebar__user");
+        var btn = document.querySelector(".sidebar__user-trigger");
+        var panel = document.getElementById("sidebar-user-menu");
+        var menuToggle = document.querySelector(".sidebar__menu-btn");
+        if (!root || !btn || !panel) return;
+
+        function closeMenu() {
+          root.classList.remove("is-open");
+          btn.setAttribute("aria-expanded", "false");
+          panel.hidden = true;
+        }
+
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var open = !root.classList.contains("is-open");
+          root.classList.toggle("is-open", open);
+          btn.setAttribute("aria-expanded", String(open));
+          panel.hidden = !open;
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!root.contains(e.target)) closeMenu();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeMenu();
+        });
+
+        if (menuToggle) menuToggle.addEventListener("click", closeMenu);
+      })();
+
+      (function () {
+        var input = document.querySelector(".search input");
+        var clear = document.querySelector(".clear-btn");
+        if (!input || !clear) return;
+        clear.addEventListener("click", function () {
+          input.value = "";
+          input.focus();
+        });
+      })();
+
+      (function () {
+        var STORAGE_KEY = "dc_saved_events";
+
+        function getSavedIds() {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return [];
+            var parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        function setSavedIds(ids) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+        }
+
+        function isSaved(id) {
+          return getSavedIds().indexOf(id) !== -1;
+        }
+
+        function toggleSaved(id) {
+          var ids = getSavedIds();
+          var i = ids.indexOf(id);
+          if (i === -1) {
+            ids.push(id);
+          } else {
+            ids.splice(i, 1);
+          }
+          setSavedIds(ids);
+        }
+
+        function syncBookmarkButton(btn) {
+          var id = btn.getAttribute("data-event-id");
+          if (!id) return;
+          var saved = isSaved(id);
+          btn.classList.toggle("bookmark--solid", saved);
+          btn.classList.toggle("bookmark--outline", !saved);
+          btn.setAttribute("aria-pressed", saved ? "true" : "false");
+          btn.setAttribute(
+            "aria-label",
+            saved ? "Remove from saved events" : "Save event to dashboard"
+          );
+          btn.setAttribute("title", saved ? "Remove from saved" : "Save event");
+        }
+
+        document.querySelectorAll(".bookmark[data-event-id]").forEach(function (btn) {
+          syncBookmarkButton(btn);
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var id = btn.getAttribute("data-event-id");
+            if (!id) return;
+            toggleSaved(id);
+            syncBookmarkButton(btn);
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

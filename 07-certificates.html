@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Certificates — DC Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream-bg: #fdf5e6;
+        --sidebar-bg: #a2c2f9;
+        --sidebar-bg-deep: #96b8f5;
+        --nav-active: #5c88e5;
+        --brown-icon: #5c4033;
+        --brown-shadow: rgba(60, 40, 28, 0.55);
+        --hamburger: #2a4d8f;
+        --sidebar-width: 302px;
+        --main-pad-x: 48px;
+        --main-pad-y: 36px;
+        --font: "Montserrat", system-ui, -apple-system, sans-serif;
+        --cert-card-bg: #fffdf8;
+        --cert-card-border: rgba(180, 155, 115, 0.45);
+        --cert-view-bg: #f5d547;
+        --cert-view-border: #e0c23a;
+        --cert-text: #2a2118;
+        --cert-muted: #4e4437;
+        --cert-grid-gap: 28px;
+        --cert-radius: 14px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--cream-bg);
+        color: var(--cert-text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
+        display: flex;
+        flex-direction: column;
+        padding: 28px 22px 32px 24px;
+        transition: width 0.22s ease, padding 0.22s ease;
+        overflow: hidden;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      .app .sidebar:has(.sidebar__user.is-open) {
+        overflow: visible;
+      }
+
+      .sidebar__top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar {
+        width: 82px;
+        padding: 18px 12px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__top {
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__user,
+      .app.is-sidebar-collapsed .nav,
+      .app.is-sidebar-collapsed .sidebar__spacer,
+      .app.is-sidebar-collapsed .sidebar__brand {
+        display: none;
+      }
+
+      .app.is-sidebar-collapsed .sidebar__menu-btn {
+        margin: 0;
+      }
+
+      .sidebar__user {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar__user.is-open {
+        z-index: 90;
+      }
+
+      .sidebar__user-trigger {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        margin: 0;
+        padding: 6px 8px 6px 4px;
+        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        font: inherit;
+        transition: background 0.15s ease;
+      }
+
+      .sidebar__user-trigger:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .sidebar__user-trigger:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      .sidebar__user-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar__user-text .sidebar__hello {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .sidebar__user-text .sidebar__role {
+        display: block;
+      }
+
+      .sidebar__user-chevron {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        color: #fff;
+        transition: transform 0.2s ease;
+      }
+
+      .sidebar__user-chevron svg {
+        display: block;
+      }
+
+      .sidebar__user.is-open .sidebar__user-chevron {
+        transform: rotate(180deg);
+      }
+
+      .sidebar__user-panel {
+        position: absolute;
+        left: 0;
+        right: -4px;
+        top: calc(100% + 8px);
+        z-index: 80;
+        padding: 8px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 10px 28px rgba(45, 95, 170, 0.35);
+      }
+
+      .sidebar__user-panel[hidden] {
+        display: none !important;
+      }
+
+      .sidebar__user-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        letter-spacing: 0.02em;
+        transition: background 0.15s ease;
+      }
+
+      .sidebar__user-link:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .sidebar__user-link:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 1px;
+      }
+
+      .sidebar__user-link svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        opacity: 0.95;
+      }
+
+      .sidebar__avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      .sidebar__hello {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.125rem;
+        letter-spacing: 0.01em;
+        line-height: 1.25;
+      }
+
+      .sidebar__role {
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 500;
+        font-size: 0.8125rem;
+        margin-top: 4px;
+      }
+
+      .sidebar__menu-btn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        flex-shrink: 0;
+        margin: -6px -4px 0 0;
+      }
+
+      .sidebar__menu-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .sidebar__menu-btn svg line {
+        stroke: var(--hamburger);
+        stroke-width: 2.25;
+        stroke-linecap: round;
+      }
+
+      .nav {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .nav a {
+        display: block;
+        padding: 14px 20px;
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: background 0.15s ease;
+      }
+
+      .nav a:hover:not(.is-active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .nav a.is-active {
+        background: var(--nav-active);
+        box-shadow: 0 4px 14px rgba(45, 100, 180, 0.35);
+      }
+
+      .sidebar__spacer {
+        flex: 1;
+        min-height: 24px;
+      }
+
+      .sidebar__brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-left: 4px;
+        margin-top: auto;
+      }
+
+      .sidebar__brand-mark img {
+        width: 58px;
+        height: auto;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.24));
+      }
+
+      .sidebar__brand-text {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.0625rem;
+        letter-spacing: 0.04em;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--cream-bg);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #3d3530 #e8dcc8;
+      }
+
+      .main::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .main::-webkit-scrollbar-track {
+        background: #e8dcc8;
+      }
+
+      .main::-webkit-scrollbar-thumb {
+        background: #3d3530;
+        border-radius: 3px;
+      }
+
+      .main__header {
+        padding: var(--main-pad-y) var(--main-pad-x) 18px;
+        flex-shrink: 0;
+      }
+
+      .main__header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .main__title {
+        font-size: clamp(2rem, 4.2vw, 2.75rem);
+        font-weight: 800;
+        color: #fffef8;
+        letter-spacing: 0.02em;
+        line-height: 1.1;
+        text-shadow:
+          3px 3px 0 var(--brown-shadow),
+          2px 2px 0 var(--brown-shadow),
+          1px 1px 0 rgba(60, 40, 28, 0.35);
+      }
+
+      .main__tools {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .main__tool {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--brown-icon);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+
+      .main__tool:hover {
+        background: rgba(92, 64, 51, 0.08);
+      }
+
+      .main__tool svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .main__divider {
+        height: 1px;
+        background: var(--brown-icon);
+        opacity: 0.55;
+        margin-top: 22px;
+        max-width: 100%;
+      }
+
+      .main__grid-wrap {
+        padding: 24px var(--main-pad-x) 48px;
+        flex: 1;
+      }
+
+      .cert-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--cert-grid-gap);
+        max-width: 1120px;
+        width: 100%;
+      }
+
+      .app.is-sidebar-collapsed .cert-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 1240px;
+      }
+
+      .cert-card {
+        border-radius: var(--cert-radius);
+        background: var(--cert-card-bg);
+        border: 1px solid var(--cert-card-border);
+        box-shadow: 4px 6px 0 rgba(60, 40, 28, 0.06), 6px 10px 22px rgba(60, 40, 28, 0.08);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .cert-card__badge {
+        flex: 1;
+        min-height: 132px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 20px 20px;
+        background: linear-gradient(180deg, rgba(255, 253, 248, 1) 0%, var(--cert-card-bg) 100%);
+      }
+
+      .cert-card__badge svg {
+        width: 72px;
+        height: 72px;
+        color: var(--cert-text);
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+      }
+
+      .cert-card__divider {
+        height: 1px;
+        background: rgba(180, 155, 115, 0.35);
+        margin: 0 14px;
+      }
+
+      .cert-card__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 16px 18px 18px;
+      }
+
+      .cert-card__title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--cert-text);
+        letter-spacing: 0.01em;
+        line-height: 1.35;
+        margin: 0;
+      }
+
+      .cert-card__date {
+        margin: 6px 0 0;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--cert-muted);
+        letter-spacing: 0.02em;
+      }
+
+      .cert-card__view {
+        flex-shrink: 0;
+        border: 1px solid var(--cert-view-border);
+        background: linear-gradient(180deg, #fde047 0%, var(--cert-view-bg) 100%);
+        color: var(--cert-text);
+        font-family: inherit;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 8px 18px;
+        border-radius: 999px;
+        cursor: pointer;
+        box-shadow: 0 1px 0 rgba(200, 170, 40, 0.45);
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+
+      .cert-card__view:hover {
+        filter: brightness(1.03);
+        transform: translateY(-1px);
+      }
+
+      .cert-card__view:active {
+        transform: translateY(0);
+      }
+
+      .cert-card__view:focus-visible {
+        outline: 2px solid var(--nav-active);
+        outline-offset: 2px;
+      }
+
+      @media (max-width: 1100px) {
+        .app.is-sidebar-collapsed .cert-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          max-width: 1120px;
+        }
+      }
+
+      @media (max-width: 960px) {
+        .app {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          padding: 20px;
+        }
+
+        .sidebar__top {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+
+        .nav {
+          flex-direction: row;
+          flex-wrap: wrap;
+          width: 100%;
+        }
+
+        .nav a {
+          padding: 10px 16px;
+        }
+
+        .sidebar__spacer {
+          display: none;
+        }
+
+        .sidebar__brand {
+          width: 100%;
+          margin-top: 20px;
+        }
+
+        .cert-grid,
+        .app.is-sidebar-collapsed .cert-grid {
+          grid-template-columns: 1fr;
+          max-width: 100%;
+        }
+
+        :root {
+          --main-pad-x: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Primary">
+        <div class="sidebar__top">
+          <div class="sidebar__user">
+            <button
+              type="button"
+              class="sidebar__user-trigger"
+              id="sidebar-user-trigger"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="sidebar-user-menu"
+            >
+              <img
+                class="sidebar__avatar"
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=128&h=128&fit=crop&crop=faces"
+                width="56"
+                height="56"
+                alt="Misxa profile photo"
+              />
+              <span class="sidebar__user-text">
+                <span class="sidebar__hello">Hello, Misxa!</span>
+                <span class="sidebar__role">Faculty</span>
+              </span>
+              <span class="sidebar__user-chevron" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
+            <div id="sidebar-user-menu" class="sidebar__user-panel" role="menu" hidden>
+              <a class="sidebar__user-link" role="menuitem" href="#">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z" />
+                </svg>
+                My Profile
+              </a>
+              <a class="sidebar__user-link" role="menuitem" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M4 12h11" />
+                </svg>
+                Log out
+              </a>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="sidebar__menu-btn"
+            aria-label="Toggle navigation"
+            aria-expanded="true"
+            aria-controls="left-navigation"
+          >
+            <svg width="24" height="18" viewBox="0 0 24 18" fill="none" aria-hidden="true">
+              <line x1="2" y1="2" x2="22" y2="2" />
+              <line x1="2" y1="9" x2="22" y2="9" />
+              <line x1="2" y1="16" x2="22" y2="16" />
+            </svg>
+          </button>
+        </div>
+
+        <nav id="left-navigation" aria-label="Main navigation">
+          <ul class="nav">
+            <li><a href="./02-dashboard.html">Dashboard</a></li>
+            <li><a href="./04-events.html">Events</a></li>
+            <li><a href="./06-attendance.html">Attendance</a></li>
+            <li><a class="is-active" href="./07-certificates.html" aria-current="page">Certificates</a></li>
+            <li><a href="./08-organize.html">Organize</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__spacer"></div>
+
+        <div class="sidebar__brand">
+          <div class="sidebar__brand-mark" aria-hidden="true">
+            <img src="./assets/logo-dc-space.png" alt="" />
+          </div>
+          <span class="sidebar__brand-text">DC Space</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="main__header">
+          <div class="main__header-row">
+            <h1 class="main__title">My Certificates</h1>
+            <div class="main__tools">
+              <button type="button" class="main__tool" aria-label="Scan or focus">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <rect x="4" y="4" width="16" height="16" rx="2" />
+                  <circle cx="12" cy="12" r="4" />
+                </svg>
+              </button>
+              <button type="button" class="main__tool" aria-label="Refresh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-2.64-6.36" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 3v6h-6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="main__divider" role="presentation"></div>
+        </header>
+
+        <div class="main__grid-wrap">
+          <div class="cert-grid" aria-label="Your certificates">
+            <article class="cert-card">
+              <div class="cert-card__badge" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect x="16" y="10" width="32" height="40" rx="4" fill="currentColor" />
+                  <rect x="21" y="16" width="22" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <rect x="21" y="22" width="16" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <circle cx="32" cy="35" r="6" fill="#fdf5e6" />
+                  <path d="M29 40l-2 8 5-3 5 3-2-8" fill="#fdf5e6" />
+                </svg>
+              </div>
+              <div class="cert-card__divider" role="presentation"></div>
+              <div class="cert-card__footer">
+                <div>
+                  <p class="cert-card__title">Event Name Certificate</p>
+                  <p class="cert-card__date">Issued Date: March 15, 2026</p>
+                </div>
+                <button type="button" class="cert-card__view">View</button>
+              </div>
+            </article>
+
+            <article class="cert-card">
+              <div class="cert-card__badge" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect x="16" y="10" width="32" height="40" rx="4" fill="currentColor" />
+                  <rect x="21" y="16" width="22" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <rect x="21" y="22" width="16" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <circle cx="32" cy="35" r="6" fill="#fdf5e6" />
+                  <path d="M29 40l-2 8 5-3 5 3-2-8" fill="#fdf5e6" />
+                </svg>
+              </div>
+              <div class="cert-card__divider" role="presentation"></div>
+              <div class="cert-card__footer">
+                <div>
+                  <p class="cert-card__title">Event Name Certificate</p>
+                  <p class="cert-card__date">Issued Date: March 20, 2026</p>
+                </div>
+                <button type="button" class="cert-card__view">View</button>
+              </div>
+            </article>
+
+            <article class="cert-card">
+              <div class="cert-card__badge" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect x="16" y="10" width="32" height="40" rx="4" fill="currentColor" />
+                  <rect x="21" y="16" width="22" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <rect x="21" y="22" width="16" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <circle cx="32" cy="35" r="6" fill="#fdf5e6" />
+                  <path d="M29 40l-2 8 5-3 5 3-2-8" fill="#fdf5e6" />
+                </svg>
+              </div>
+              <div class="cert-card__divider" role="presentation"></div>
+              <div class="cert-card__footer">
+                <div>
+                  <p class="cert-card__title">Event Name Certificate</p>
+                  <p class="cert-card__date">Issued Date: April 2, 2026</p>
+                </div>
+                <button type="button" class="cert-card__view">View</button>
+              </div>
+            </article>
+
+            <article class="cert-card">
+              <div class="cert-card__badge" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect x="16" y="10" width="32" height="40" rx="4" fill="currentColor" />
+                  <rect x="21" y="16" width="22" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <rect x="21" y="22" width="16" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <circle cx="32" cy="35" r="6" fill="#fdf5e6" />
+                  <path d="M29 40l-2 8 5-3 5 3-2-8" fill="#fdf5e6" />
+                </svg>
+              </div>
+              <div class="cert-card__divider" role="presentation"></div>
+              <div class="cert-card__footer">
+                <div>
+                  <p class="cert-card__title">Event Name Certificate</p>
+                  <p class="cert-card__date">Issued Date: April 10, 2026</p>
+                </div>
+                <button type="button" class="cert-card__view">View</button>
+              </div>
+            </article>
+
+            <article class="cert-card">
+              <div class="cert-card__badge" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect x="16" y="10" width="32" height="40" rx="4" fill="currentColor" />
+                  <rect x="21" y="16" width="22" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <rect x="21" y="22" width="16" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <circle cx="32" cy="35" r="6" fill="#fdf5e6" />
+                  <path d="M29 40l-2 8 5-3 5 3-2-8" fill="#fdf5e6" />
+                </svg>
+              </div>
+              <div class="cert-card__divider" role="presentation"></div>
+              <div class="cert-card__footer">
+                <div>
+                  <p class="cert-card__title">Event Name Certificate</p>
+                  <p class="cert-card__date">Issued Date: May 5, 2026</p>
+                </div>
+                <button type="button" class="cert-card__view">View</button>
+              </div>
+            </article>
+
+            <article class="cert-card">
+              <div class="cert-card__badge" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect x="16" y="10" width="32" height="40" rx="4" fill="currentColor" />
+                  <rect x="21" y="16" width="22" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <rect x="21" y="22" width="16" height="2.5" rx="1.25" fill="#fdf5e6" />
+                  <circle cx="32" cy="35" r="6" fill="#fdf5e6" />
+                  <path d="M29 40l-2 8 5-3 5 3-2-8" fill="#fdf5e6" />
+                </svg>
+              </div>
+              <div class="cert-card__divider" role="presentation"></div>
+              <div class="cert-card__footer">
+                <div>
+                  <p class="cert-card__title">Event Name Certificate</p>
+                  <p class="cert-card__date">Issued Date: May 18, 2026</p>
+                </div>
+                <button type="button" class="cert-card__view">View</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      (function () {
+        var app = document.querySelector(".app");
+        var toggleButton = document.querySelector(".sidebar__menu-btn");
+        if (!app || !toggleButton) return;
+
+        toggleButton.addEventListener("click", function () {
+          var isCollapsed = app.classList.toggle("is-sidebar-collapsed");
+          toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
+        });
+      })();
+
+      (function () {
+        var root = document.querySelector(".sidebar__user");
+        var btn = document.querySelector(".sidebar__user-trigger");
+        var panel = document.getElementById("sidebar-user-menu");
+        var menuToggle = document.querySelector(".sidebar__menu-btn");
+        if (!root || !btn || !panel) return;
+
+        function closeMenu() {
+          root.classList.remove("is-open");
+          btn.setAttribute("aria-expanded", "false");
+          panel.hidden = true;
+        }
+
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var open = !root.classList.contains("is-open");
+          root.classList.toggle("is-open", open);
+          btn.setAttribute("aria-expanded", String(open));
+          panel.hidden = !open;
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!root.contains(e.target)) closeMenu();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeMenu();
+        });
+
+        if (menuToggle) menuToggle.addEventListener("click", closeMenu);
+      })();
+    </script>
+  </body>
+</html>
