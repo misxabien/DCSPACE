@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    :root {
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --blue-btn: #3d82f0;
+      --cream: #FFFEF4;
+      --text: #1a1a1a;
+      --muted: #8e8e8e;
+      --border: #1a1a1a;
+      --placeholder: #b0b0b0;
+      --required: #e53935;
+      --blue-ring: rgba(68, 138, 255, 0.15);
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        #DBE8FF 0%,
+        #8AB6FF 27%,
+        #448AFF 50%,
+        #8AB6FF 77%,
+        #DBE8FF 100%
+      );
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(calc(550px + 112px), 1fr);
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* ── Left panel ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 48px 32px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      line-height: 0;
+      margin-bottom: -30px;
+    }
+
+    .logo {
+      width: 260px;
+      height: auto;
+      display: block;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 6px 12px rgba(0, 40, 80, 0.12));
+    }
+
+    .greeting {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 28px;
+      opacity: 0.95;
+    }
+    .btn-signin-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 175px;
+      height: 40px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue-btn);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 50, 120, 0.22);
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    
+    .btn-signin-link:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-signin-link:active {
+      transform: scale(0.99);
+    }
+
+    /* ── Right form panel ── */
+    .form-panel {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      background: var(--cream);
+      border-radius: 0;
+      box-shadow: -12px 0 40px rgba(0, 40, 90, 0.1);
+      padding: 36px 56px 40px 56px;
+      margin-left: -24px;
+      min-height: 100vh;
+    }
+
+    .form-inner {
+      width: 550px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .page-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 26px;
+      line-height: 1.15;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .form-inner form {
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 46px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .req {
+      color: var(--required);
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-group input::placeholder {
+      color: var(--placeholder);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+
+    .form-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .btn-continue {
+      width: auto;
+      height: 38px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 3px 10px rgba(68, 138, 255, 0.2);
+    }
+
+    .btn-continue:hover {
+      background: var(--blue-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 40px 24px 32px;
+      }
+
+      .form-panel {
+        width: 100%;
+        margin-left: 0;
+        border-radius: 0;
+        padding: 36px 32px 40px;
+        min-height: auto;
+        align-items: stretch;
+        justify-content: flex-start;
+      }
+
+      .form-inner {
+        max-width: 100%;
+      }
+
+      .form-inner form {
+        max-width: 100%;
+      }
+
+      .page-title {
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        width: 220px;
+      }
+
+      .greeting {
+        font-size: 22px;
+      }
+
+      .form-panel {
+        padding: 28px 24px 32px;
+      }
+
+      .form-actions {
+        justify-content: stretch;
+      }
+
+      .btn-continue {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="hero" aria-label="Welcome">
+      <div class="logo-wrap">
+        <img
+          src="finallogo.png"
+          alt="DC Space logo"
+          class="logo"
+          width="260"
+          height="130"
+        >
+      </div>
+      <h1 class="greeting">Hello New Friend!</h1>
+      <p class="hero-sub">Already have an account?</p>
+      <a href="./01-login.html" class="btn-signin-link">
+        <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M19 12H5M12 19l-7-7 7-7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Sign In
+      </a>
+    </aside>
+
+    <section class="form-panel" aria-label="Create account form">
+      <div class="form-inner">
+        <h2 class="page-title">Create Account</h2>
+        <h3 class="section-title">Personal Info</h3>
+
+        <form action="./03-schooldetails.html" method="get">
+          <div class="form-group">
+            <label for="firstName">First Name<span class="req">*</span></label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="Enter your first name"
+              autocomplete="given-name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name<span class="req">*</span></label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Enter your last name"
+              autocomplete="family-name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="studentNumber">Student Number<span class="req">*</span></label>
+            <input
+              type="text"
+              id="studentNumber"
+              name="studentNumber"
+              placeholder="Enter your student number"
+              inputmode="numeric"
+              required
+            >
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-continue">Save &amp; Continue</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

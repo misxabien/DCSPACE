@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — School Details</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    :root {
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --blue-btn: #3d82f0;
+      --cream: #FFFEF4;
+      --text: #1a1a1a;
+      --muted: #8e8e8e;
+      --border: #1a1a1a;
+      --placeholder: #b0b0b0;
+      --required: #e53935;
+      --blue-ring: rgba(68, 138, 255, 0.15);
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        #DBE8FF 0%,
+        #8AB6FF 27%,
+        #448AFF 50%,
+        #8AB6FF 77%,
+        #DBE8FF 100%
+      );
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(calc(550px + 112px), 1fr);
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* ── Left panel ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 48px 32px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      line-height: 0;
+      margin-bottom: -30px;
+    }
+
+    .logo {
+      width: 260px;
+      height: auto;
+      display: block;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 6px 12px rgba(0, 40, 80, 0.12));
+    }
+
+    .greeting {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 28px;
+      opacity: 0.95;
+    }
+
+    .btn-signin-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 175px;
+      height: 40px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue-btn);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 50, 120, 0.22);
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .btn-signin-link:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-signin-link:active {
+      transform: scale(0.99);
+    }
+
+    /* ── Right form panel ── */
+    .form-panel {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      background: var(--cream);
+      border-radius: 0;
+      box-shadow: -12px 0 40px rgba(0, 40, 90, 0.1);
+      padding: 36px 56px 40px 56px;
+      margin-left: -24px;
+      min-height: 100vh;
+    }
+
+    .form-inner {
+      width: 550px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .page-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 26px;
+      line-height: 1.15;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .form-inner form {
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .req {
+      color: var(--required);
+    }
+
+    .field-note {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      height: 42px;
+      padding: 0 36px 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-group input {
+      padding-right: 14px;
+    }
+
+    .form-group input::placeholder {
+      color: var(--placeholder);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      display: flex;
+      line-height: 0;
+    }
+
+    .select-icon svg {
+      width: 8px;
+      height: 12px;
+      display: block;
+    }
+
+    .form-group select {
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .form-group select:invalid,
+    .form-group select.is-placeholder {
+      color: var(--placeholder);
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    .form-group select:valid:not(.is-placeholder) {
+      color: var(--text);
+      font-style: normal;
+      font-size: 13px;
+    }
+
+    .form-group select option[value=''] {
+      color: var(--placeholder);
+      font-style: italic;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+
+    .form-footer {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .back-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.15s ease;
+    }
+
+    .back-link:hover {
+      color: var(--blue-dark);
+      text-decoration: underline;
+    }
+
+    .btn-continue {
+      width: auto;
+      height: 38px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 3px 10px rgba(68, 138, 255, 0.2);
+    }
+
+    .btn-continue:hover {
+      background: var(--blue-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 40px 24px 32px;
+      }
+
+      .form-panel {
+        width: 100%;
+        margin-left: 0;
+        border-radius: 0;
+        padding: 36px 32px 40px;
+        min-height: auto;
+      }
+
+      .form-inner {
+        max-width: 100%;
+      }
+
+      .page-title {
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        width: 220px;
+      }
+
+      .greeting {
+        font-size: 22px;
+      }
+
+      .form-panel {
+        padding: 28px 24px 32px;
+        border-radius: 0;
+      }
+
+      .form-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .back-link {
+        text-align: center;
+      }
+
+      .btn-continue {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="hero" aria-label="Welcome">
+      <div class="logo-wrap">
+        <img
+          src="finallogo.png"
+          alt="DC Space logo"
+          class="logo"
+          width="260"
+          height="130"
+        >
+      </div>
+      <h1 class="greeting">Hello New Friend!</h1>
+      <p class="hero-sub">Already have an account?</p>
+      <a href="./01-login.html" class="btn-signin-link">
+        <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M19 12H5M12 19l-7-7 7-7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Sign In
+      </a>
+    </aside>
+
+    <section class="form-panel" aria-label="School details form">
+      <div class="form-inner">
+        <h2 class="page-title">Create Account</h2>
+        <h3 class="section-title">School Details</h3>
+
+        <form action="./04-accounts.html" method="get">
+          <div class="form-group">
+            <label for="course">Course<span class="req">*</span></label>
+            <div class="select-wrap">
+              <select id="course" name="course" required>
+                <option value="" selected disabled>Choose your course</option>
+                <option value="bs-medical-laboratory-science">BS Medical Laboratory Science (Medical Technology)</option>
+                <option value="bs-biology">BS Biology</option>
+                <option value="bs-pharmacy">BS Pharmacy</option>
+                <option value="bs-accountancy">BS Accountancy</option>
+                <option value="bs-accounting-information-system">BS Accounting Information System</option>
+                <option value="bs-psychology">BS Psychology</option>
+                <option value="beed">Bachelor of Elementary Education</option>
+                <option value="bsed">Bachelor of Secondary Education</option>
+                <option value="bs-information-technology">BS Information Technology</option>
+                <option value="bma">Bachelor of Multimedia Arts</option>
+                <option value="ba-communication">BA Communication</option>
+                <option value="bsba-financial-management">BS Business Administration — Major in Financial Management</option>
+                <option value="bsba-marketing-management">BS Business Administration — Major in Marketing Management</option>
+                <option value="bsba-human-resource-development-management">BS Business Administration — Major in Human Resource Development Management</option>
+                <option value="bsba-operations-management">BS Business Administration — Major in Operations Management</option>
+                <option value="bs-tourism-management">BS Tourism Management</option>
+                <option value="bshm">BS Hospitality Management</option>
+                <option value="bshm-cruiseline-operations">BS Hospitality Management — Specialization in Cruiseline Operations</option>
+                <option value="bshm-culinary-arts-kitchen-operations">BS Hospitality Management — Specialization in Culinary Arts and Kitchen Operations</option>
+                <option value="bs-nursing">BS Nursing</option>
+                <option value="bs-physical-therapy">BS Physical Therapy</option>
+                <option value="bs-radiologic-technology">BS Radiologic Technology</option>
+              </select>
+              <span class="select-icon" aria-hidden="true">
+                <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 4L4 1L7 4" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M1 8L4 11L7 8" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="schoolDepartment">School/Department<span class="req">*</span></label>
+            <div class="select-wrap">
+              <select id="schoolDepartment" name="schoolDepartment" required>
+                <option value="" selected disabled>Choose your school/department</option>
+                <option value="sase">School of Accountancy, Sciences, and Education — SASE</option>
+                <option value="scmcs">School of Communication, Multimedia, and Computer Studies — SCMCS</option>
+                <option value="sihtm">School of International Hospitality, Tourism, and Management — SIHTM</option>
+                <option value="snahs">School of Nursing and Allied Health Studies — SNAHS</option>
+                <option value="smls">School of Medical Laboratory Sciences — SMLS</option>
+              </select>
+              <span class="select-icon" aria-hidden="true">
+                <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 4L4 1L7 4" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M1 8L4 11L7 8" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="organization">Organization</label>
+            <input
+              type="text"
+              id="organization"
+              name="organization"
+              placeholder="Enter your organization"
+              autocomplete="organization"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="organizationRole">Organization Role</label>
+            <div class="select-wrap">
+              <select id="organizationRole" name="organizationRole">
+                <option value="" selected disabled>Choose your role</option>
+                <option value="student">Student</option>
+                <option value="officer">Officer</option>
+              </select>
+              <span class="select-icon" aria-hidden="true">
+                <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 4L4 1L7 4" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M1 8L4 11L7 8" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="organizationPosition">Organization Position</label>
+            <input
+              type="text"
+              id="organizationPosition"
+              name="organizationPosition"
+              placeholder="Enter your organization position"
+            >
+            <span class="field-note">If you are not an officer, type N/A.</span>
+          </div>
+
+          <div class="form-footer">
+            <a href="./02-create.html" class="back-link">Go back to Personal Info</a>
+            <button type="submit" class="btn-continue">Save &amp; Continue</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+  <script>
+    var courseToSchool = {
+      'bs-accountancy': 'sase',
+      'bs-accounting-information-system': 'sase',
+      'bs-psychology': 'sase',
+      'beed': 'sase',
+      'bsed': 'sase',
+      'bs-information-technology': 'scmcs',
+      'bma': 'scmcs',
+      'ba-communication': 'scmcs',
+      'bsba-financial-management': 'sihtm',
+      'bsba-marketing-management': 'sihtm',
+      'bsba-human-resource-development-management': 'sihtm',
+      'bsba-operations-management': 'sihtm',
+      'bs-tourism-management': 'sihtm',
+      'bshm': 'sihtm',
+      'bshm-cruiseline-operations': 'sihtm',
+      'bshm-culinary-arts-kitchen-operations': 'sihtm',
+      'bs-nursing': 'snahs',
+      'bs-physical-therapy': 'snahs',
+      'bs-radiologic-technology': 'snahs',
+      'bs-pharmacy': 'smls',
+      'bs-medical-laboratory-science': 'smls',
+      'bs-biology': 'smls'
+    };
+
+    function syncPlaceholder(select) {
+      select.classList.toggle('is-placeholder', select.value === '');
+    }
+
+    document.querySelectorAll('.form-group select').forEach(function (select) {
+      select.addEventListener('change', function () {
+        syncPlaceholder(select);
+      });
+      syncPlaceholder(select);
+    });
+
+    var courseSelect = document.getElementById('course');
+    var schoolSelect = document.getElementById('schoolDepartment');
+
+    courseSelect.addEventListener('change', function () {
+      var school = courseToSchool[this.value];
+      if (school) {
+        schoolSelect.value = school;
+        syncPlaceholder(schoolSelect);
+      }
+    });
+  </script>
+</body>
+</html>

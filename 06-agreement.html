@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — Agreement &amp; Data Privacy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    :root {
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --blue-btn: #3d82f0;
+      --cream: #FFFEF4;
+      --text: #1a1a1a;
+      --muted: #8e8e8e;
+      --border: #1a1a1a;
+      --blue-ring: rgba(68, 138, 255, 0.15);
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .page-backdrop {
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        #DBE8FF 0%,
+        #8AB6FF 27%,
+        #448AFF 50%,
+        #8AB6FF 77%,
+        #DBE8FF 100%
+      );
+      filter: blur(10px);
+      transform: scale(1.02);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(calc(550px + 112px), 1fr);
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 48px 32px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      line-height: 0;
+      margin-bottom: -30px;
+    }
+
+    .logo {
+      width: 260px;
+      height: auto;
+      display: block;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 6px 12px rgba(0, 40, 80, 0.12));
+    }
+
+    .greeting {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .form-panel {
+      background: var(--cream);
+      box-shadow: -12px 0 40px rgba(0, 40, 90, 0.1);
+      padding: 36px 56px 40px;
+      margin-left: -24px;
+      min-height: 100vh;
+    }
+
+    .form-inner {
+      width: 550px;
+      max-width: 100%;
+    }
+
+    .page-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 26px;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .section-copy {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .fake-input {
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(219, 232, 255, 0.35);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .agreement-modal {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      background: var(--cream);
+      border: 2px solid var(--blue);
+      border-radius: 14px;
+      padding: 36px 32px 32px;
+      box-shadow: 0 24px 64px rgba(0, 40, 90, 0.18);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 6px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--blue-dark);
+    }
+
+    .modal-intro {
+      margin-top: 8px;
+      margin-bottom: 18px;
+      padding: 0 28px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    .modal-title {
+      margin-bottom: 22px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section__title {
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1.3;
+    }
+
+    .modal-section__body {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .consent-row input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .consent-box {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      border: 2px solid var(--blue);
+      border-radius: 4px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+    }
+
+    .consent-box svg {
+      width: 12px;
+      height: 12px;
+      opacity: 0;
+      color: #fff;
+    }
+
+    .consent-row input:checked + .consent-box {
+      background: var(--blue);
+    }
+
+    .consent-row input:checked + .consent-box svg {
+      opacity: 1;
+    }
+
+    .consent-row input:focus-visible + .consent-box {
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+
+    .consent-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .btn-create {
+      min-width: 162px;
+      height: 38px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, opacity 0.15s ease;
+      box-shadow: 0 3px 10px rgba(68, 138, 255, 0.2);
+    }
+
+    .btn-create:hover:not(:disabled) {
+      background: var(--blue-dark);
+    }
+
+    .btn-create:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .form-panel {
+        margin-left: 0;
+        min-height: 60vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .agreement-modal {
+        padding: 32px 20px 24px;
+      }
+
+      .modal-intro {
+        padding: 0 12px;
+        font-size: 12px;
+      }
+
+      .modal-title {
+        font-size: 19px;
+      }
+
+      .modal-close {
+        top: 12px;
+        left: 12px;
+      }
+
+      .btn-create {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-backdrop" aria-hidden="true">
+    <div class="shell">
+      <aside class="hero">
+        <div class="logo-wrap">
+          <img src="finallogo.png" alt="" class="logo" width="260" height="130">
+        </div>
+        <h1 class="greeting">Hello New Friend!</h1>
+      </aside>
+      <section class="form-panel">
+        <div class="form-inner">
+          <h2 class="page-title">Create Account</h2>
+          <h3 class="section-title">Verify your Account</h3>
+          <p class="section-copy">Kindly check your email for the verification code.</p>
+          <div class="fake-input"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-overlay" role="presentation">
+    <div class="agreement-modal" role="dialog" aria-modal="true" aria-labelledby="agreementTitle">
+      <a href="./05verify.html" class="modal-close" aria-label="Close agreement dialog">&times;</a>
+
+      <p class="modal-intro">To create your account, please review and agree to the Data Privacy Policy first.</p>
+      <h2 class="modal-title" id="agreementTitle">Agreement &amp; Data Privacy</h2>
+
+      <div class="modal-section">
+        <h3 class="modal-section__title">Data Privacy Notice</h3>
+        <p class="modal-section__body">
+          DC Space collects and processes your personal information, including your student number, school email,
+          course details, and attendance records, solely for academic and campus event management purposes.
+          All data is handled in accordance with the Data Privacy Act of 2012 (RA 10173) and our institutional
+          privacy guidelines. Your information will not be shared with third parties without your consent,
+          except as required by law.
+        </p>
+      </div>
+
+      <div class="modal-section">
+        <h3 class="modal-section__title">Consent</h3>
+        <form id="agreementForm" action="./01-login.html" method="get">
+          <label class="consent-row">
+            <input type="checkbox" id="consent" name="consent" required>
+            <span class="consent-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+            </span>
+            <span class="consent-label">I have read and agree to the Data Privacy Notice and give my consent for the collection and processing of my student number.</span>
+          </label>
+
+          <div class="modal-actions">
+            <button type="submit" class="btn-create" id="submitBtn" disabled>Create Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var consent = document.getElementById('consent');
+    var submitBtn = document.getElementById('submitBtn');
+
+    consent.addEventListener('change', function () {
+      submitBtn.disabled = !consent.checked;
+    });
+  </script>
+</body>
+</html>

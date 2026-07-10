@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — New Password</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    :root {
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --cream: #FFFEF4;
+      --text: #1a1a1a;
+      --border: #1a1a1a;
+      --placeholder: #b0b0b0;
+      --blue-ring: rgba(68, 138, 255, 0.15);
+      --match-ok: #43a047;
+      --match-error: #e53935;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        #DBE8FF 0%,
+        #8AB6FF 27%,
+        #448AFF 50%,
+        #8AB6FF 77%,
+        #DBE8FF 100%
+      );
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(calc(550px + 112px), 1fr) minmax(0, 1fr);
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .form-panel {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      background: var(--cream);
+      border-radius: 0;
+      box-shadow: 12px 0 40px rgba(0, 40, 90, 0.1);
+      padding: 36px 56px 40px;
+      margin-right: -24px;
+      min-height: 100vh;
+    }
+
+    .form-inner {
+      width: 550px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      min-height: calc(100vh - 76px);
+    }
+
+    .page-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 26px;
+      line-height: 1.15;
+    }
+
+    .section-copy {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.45;
+      margin-bottom: 46px;
+    }
+
+    .form-inner form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 42px;
+      padding: 0 42px 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-group input::placeholder {
+      color: var(--placeholder);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: #b0b0b0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .toggle-password svg {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .toggle-password:hover {
+      color: var(--text);
+    }
+
+    .toggle-password .icon-eye-off {
+      display: block;
+    }
+
+    .toggle-password .icon-eye-on {
+      display: none;
+    }
+
+    .toggle-password.is-visible .icon-eye-off {
+      display: none;
+    }
+
+    .toggle-password.is-visible .icon-eye-on {
+      display: block;
+    }
+
+    .match-message {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.35;
+      display: none;
+    }
+
+    .match-message.is-match {
+      display: block;
+      color: var(--match-ok);
+    }
+
+    .match-message.is-mismatch {
+      display: block;
+      color: var(--match-error);
+    }
+
+    .form-actions {
+      margin-top: auto;
+      padding-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .btn-save {
+      min-width: 168px;
+      height: 38px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 3px 10px rgba(68, 138, 255, 0.2);
+    }
+
+    .btn-save:hover {
+      background: var(--blue-dark);
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 48px 32px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      line-height: 0;
+      margin-bottom: -30px;
+    }
+
+    .logo {
+      width: 260px;
+      height: auto;
+      display: block;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 6px 12px rgba(0, 40, 80, 0.12));
+    }
+
+    .greeting {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(219, 232, 255, 0.35);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .success-overlay.is-open {
+      display: flex;
+    }
+
+    .success-modal {
+      width: 100%;
+      max-width: 420px;
+      background: var(--cream);
+      border: 2px solid var(--blue);
+      border-radius: 14px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 24px 64px rgba(0, 40, 90, 0.18);
+      text-align: center;
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .success-copy {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .btn-back-login {
+      min-width: 162px;
+      height: 38px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 3px 10px rgba(68, 138, 255, 0.2);
+    }
+
+    .btn-back-login:hover {
+      background: var(--blue-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .form-panel {
+        width: 100%;
+        margin-right: 0;
+        padding: 36px 32px 40px;
+        min-height: auto;
+        order: 2;
+      }
+
+      .hero {
+        order: 1;
+        padding: 40px 24px 32px;
+      }
+
+      .form-inner {
+        max-width: 100%;
+        min-height: auto;
+      }
+
+      .page-title {
+        font-size: 26px;
+      }
+
+      .form-actions {
+        margin-top: 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        width: 220px;
+      }
+
+      .greeting {
+        font-size: 22px;
+      }
+
+      .form-panel {
+        padding: 28px 24px 32px;
+      }
+
+      .form-actions {
+        justify-content: stretch;
+      }
+
+      .btn-save {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="form-panel" aria-label="Reset password new password form">
+      <div class="form-inner">
+        <h1 class="page-title">Reset your password</h1>
+        <p class="section-copy">Change your password.</p>
+
+        <form action="./01-login.html" method="get" id="newPasswordForm">
+          <div class="form-group">
+            <label for="newPassword">New Password:</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                placeholder="Enter your new password"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password" data-target="newPassword" aria-label="Show password">
+                <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                  <path d="M3.5 3.5l17 17"/>
+                </svg>
+                <svg class="icon-eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Re-enter Password:</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password" data-target="confirmPassword" aria-label="Show password">
+                <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                  <path d="M3.5 3.5l17 17"/>
+                </svg>
+                <svg class="icon-eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                </svg>
+              </button>
+            </div>
+            <p class="match-message" id="matchMessage"></p>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Save New Password</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <aside class="hero" aria-label="Forgot password">
+      <div class="logo-wrap">
+        <img
+          src="finallogo.png"
+          alt="DC Space logo"
+          class="logo"
+          width="260"
+          height="130"
+        >
+      </div>
+      <h2 class="greeting">Forgot your password?</h2>
+    </aside>
+  </div>
+
+  <div class="success-overlay" id="successOverlay" role="presentation">
+    <div class="success-modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <h2 class="success-title" id="successTitle">Password Updated</h2>
+      <p class="success-copy">Your password has been changed successfully. You can now sign in with your new password.</p>
+      <button type="button" class="btn-back-login" id="backToLoginBtn">Back to Sign In</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.getAttribute('data-target'));
+        var isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.classList.toggle('is-visible', isHidden);
+        btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      });
+    });
+
+    var newPasswordForm = document.getElementById('newPasswordForm');
+    var newPasswordInput = document.getElementById('newPassword');
+    var confirmPasswordInput = document.getElementById('confirmPassword');
+    var matchMessage = document.getElementById('matchMessage');
+    var successOverlay = document.getElementById('successOverlay');
+    var backToLoginBtn = document.getElementById('backToLoginBtn');
+
+    function updateMatchMessage() {
+      var password = newPasswordInput.value;
+      var confirm = confirmPasswordInput.value;
+
+      matchMessage.className = 'match-message';
+
+      if (!confirm) {
+        return true;
+      }
+
+      if (password === confirm && password.length > 0) {
+        matchMessage.textContent = 'Password matched!';
+        matchMessage.classList.add('is-match');
+        return true;
+      }
+
+      matchMessage.textContent = "Password doesn't match.";
+      matchMessage.classList.add('is-mismatch');
+      return false;
+    }
+
+    newPasswordInput.addEventListener('input', updateMatchMessage);
+    confirmPasswordInput.addEventListener('input', updateMatchMessage);
+
+    newPasswordForm.addEventListener('submit', function (event) {
+      if (!updateMatchMessage()) {
+        event.preventDefault();
+        confirmPasswordInput.focus();
+        return;
+      }
+
+      event.preventDefault();
+      successOverlay.classList.add('is-open');
+    });
+
+    backToLoginBtn.addEventListener('click', function () {
+      window.location.href = './01-login.html';
+    });
+  </script>
+</body>
+</html>

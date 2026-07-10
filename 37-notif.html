@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — Notifications</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-bg: #DAE4F8;
+      --main-bg: #FFFCF8;
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --text: #1a1a1a;
+      --muted: #6b6b6b;
+      --card-hover: #FFEED5;
+      --date-label: #c4a574;
+      --sidebar-width: 248px;
+      --font: 'Montserrat', sans-serif;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: var(--font);
+      background: var(--main-bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 20px 32px;
+      min-height: 100vh;
+      position: relative;
+      transition: width 0.22s ease, padding 0.22s ease;
+    }
+
+    .sidebar__collapse {
+      position: absolute;
+      top: 14px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--blue);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar__collapse:hover { background: rgba(68, 138, 255, 0.12); }
+    .sidebar__collapse svg { width: 22px; height: 22px; display: block; }
+    .app.is-sidebar-collapsed .sidebar__collapse { display: none; }
+
+    .sidebar__toggle {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 18px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(68, 138, 255, 0.12);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .app.is-sidebar-collapsed .sidebar__toggle { display: flex; }
+
+    .sidebar__toggle img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%);
+    }
+
+    .sidebar__brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .sidebar__logo {
+      width: 120px;
+      filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%);
+      margin-bottom: 4px;
+    }
+
+    .sidebar__title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: 0.06em;
+    }
+
+    .nav { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .nav a svg { width: 20px; height: 20px; flex-shrink: 0; stroke: currentColor; fill: none; }
+    .nav a:hover:not(.is-active) { background: rgba(68, 138, 255, 0.12); }
+    .nav a.is-active { background: var(--blue); color: #fff; }
+    .nav a.is-active svg { stroke: #fff; }
+
+    .sidebar__spacer { flex: 1; min-height: 24px; }
+    .nav--bottom { margin-top: auto; padding-top: 16px; }
+
+    .app.is-sidebar-collapsed .sidebar { width: 102px; padding: 28px 12px 24px; }
+    .app.is-sidebar-collapsed .sidebar__brand { display: none; }
+    .app.is-sidebar-collapsed .nav a { justify-content: center; gap: 0; padding: 14px 0; font-size: 0; }
+    .app.is-sidebar-collapsed .nav a svg { width: 24px; height: 24px; }
+    .app.is-sidebar-collapsed .nav a.is-active { width: 56px; margin: 0 auto; }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      padding: 32px 40px 48px;
+    }
+
+    .main__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .main__greeting {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.15;
+    }
+
+    .main__tools {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .main__user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .tool-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .tool-btn:hover { background: rgba(68, 138, 255, 0.1); }
+    .tool-btn--avatar { background: #c5d9fc; }
+    .tool-btn--notif { background: rgba(68, 138, 255, 0.15); }
+    .tool-btn--help { background: var(--blue); color: #fff; }
+    .tool-btn svg { width: 22px; height: 22px; }
+
+    /* ── Toolbar: tabs + search ── */
+    .notif-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .notif-tabs {
+      display: inline-flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid rgba(68, 138, 255, 0.22);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .notif-tab {
+      border: none;
+      background: transparent;
+      padding: 8px 22px;
+      border-radius: 999px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .notif-tab:hover:not(.is-active) {
+      color: var(--blue);
+      background: rgba(68, 138, 255, 0.06);
+    }
+
+    .notif-tab.is-active {
+      background: rgba(68, 138, 255, 0.14);
+      color: var(--blue);
+    }
+
+    .notif-toolbar__search {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      min-width: 220px;
+      max-width: 380px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .search-bar__field {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 40px;
+      padding: 0 14px;
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-radius: 10px 0 0 10px;
+      border-right: none;
+    }
+
+    .search-bar__field svg {
+      width: 17px;
+      height: 17px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .search-bar__field input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text);
+      background: transparent;
+      min-width: 0;
+    }
+
+    .search-bar__field input::placeholder { color: #b0b0b0; }
+
+    .search-bar__filter {
+      width: 44px;
+      height: 40px;
+      border: none;
+      border-radius: 0 10px 10px 0;
+      background: linear-gradient(180deg, #f5c842 0%, #e8a832 100%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .search-bar__filter svg {
+      width: 18px;
+      height: 18px;
+      stroke: #1a1a1a;
+    }
+
+    /* ── Notification groups ── */
+    .notif-group {
+      margin-bottom: 32px;
+    }
+
+    .notif-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .notif-group__head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .notif-group__label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--date-label);
+      flex-shrink: 0;
+    }
+
+    .notif-group__line {
+      flex: 1;
+      height: 1px;
+      background: rgba(196, 165, 116, 0.4);
+    }
+
+    .notif-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      width: 100%;
+      padding: 16px 18px;
+      border: none;
+      background: #fff;
+      text-align: left;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: background 0.18s ease;
+      position: relative;
+    }
+
+    .notif-item:hover,
+    .notif-item.is-highlighted {
+      background: var(--card-hover);
+    }
+
+    .notif-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 74px;
+      right: 18px;
+      bottom: 0;
+      height: 1px;
+      background: rgba(68, 138, 255, 0.1);
+    }
+
+    .notif-item__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .notif-item__icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+      fill: none;
+    }
+
+    .notif-item__icon--blue { background: var(--blue); }
+    .notif-item__icon--cyan { background: #26c6da; }
+    .notif-item__icon--red { background: #ef5350; }
+    .notif-item__icon--gold { background: #d4a853; }
+
+    .notif-item__body {
+      flex: 1;
+      min-width: 0;
+      padding-top: 2px;
+    }
+
+    .notif-item__title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .notif-item__desc {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.45;
+      opacity: 0.88;
+    }
+
+    .notif-item__time {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      flex-shrink: 0;
+      white-space: nowrap;
+      padding-top: 4px;
+    }
+
+    .notif-empty {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 24px 18px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .notif-empty[hidden] { display: none; }
+
+    @media (max-width: 900px) {
+      .app { flex-direction: column; }
+      .sidebar { width: 100%; min-height: auto; padding: 20px; }
+      .sidebar__collapse, .sidebar__toggle { display: none !important; }
+      .sidebar__spacer, .nav--bottom { display: none; }
+      .main { padding: 24px 20px 40px; }
+      .main__user-name { display: none; }
+      .notif-toolbar { flex-direction: column; align-items: stretch; }
+      .notif-toolbar__search { max-width: 100%; }
+      .notif-tabs { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <button type="button" class="sidebar__collapse" id="sidebar-collapse" aria-label="Collapse sidebar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="6.5" r="2.8" fill="currentColor" opacity="0.78"/><circle cx="17.5" cy="6.5" r="3.6" fill="currentColor"/><circle cx="6.5" cy="17.5" r="3.6" fill="currentColor"/><circle cx="17.5" cy="17.5" r="2.3" fill="currentColor"/></svg>
+      </button>
+      <button type="button" class="sidebar__toggle" id="sidebar-toggle" aria-label="Expand sidebar">
+        <img src="finallogo.png" alt="">
+      </button>
+      <div class="sidebar__brand">
+        <img src="finallogo.png" alt="DC Space" class="sidebar__logo" width="120" height="60">
+        <span class="sidebar__title">DC SPACE</span>
+      </div>
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="./09-home.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9.5z"/></svg>Home</a></li>
+          <li><a href="./14-event.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Events</a></li>
+          <li><a href="./22-attendance.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Attendance</a></li>
+          <li><a href="./29-saved.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Saved Events</a></li>
+          <li><a href="./26-certificates.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Certificates</a></li>
+        </ul>
+      </nav>
+      <div class="sidebar__spacer" aria-hidden="true"></div>
+      <ul class="nav nav--bottom">
+        <li>
+          <a href="./33-feedbacl.html">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Submit Feedback
+          </a>
+        </li>
+        <li>
+          <a href="./01-login.html">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Log out
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <div class="main__top">
+        <h1 class="main__greeting">Notifications</h1>
+        <div class="main__tools">
+          <span class="main__user-name">Your Name</span>
+          <a class="tool-btn tool-btn--avatar" href="./36-profile.html" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/></svg>
+          </a>
+          <a class="tool-btn tool-btn--notif" href="./37-notif.html" aria-label="Notifications" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </a>
+          <button type="button" class="tool-btn tool-btn--help" aria-label="Help">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="notif-toolbar">
+        <div class="notif-tabs" role="tablist" aria-label="Filter notifications">
+          <button type="button" class="notif-tab is-active" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button type="button" class="notif-tab" role="tab" aria-selected="false" data-filter="recent">Recent</button>
+          <button type="button" class="notif-tab" role="tab" aria-selected="false" data-filter="unread">Unread</button>
+        </div>
+        <div class="notif-toolbar__search">
+          <div class="search-bar">
+            <div class="search-bar__field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="search" id="notif-search" placeholder="Search" aria-label="Search notifications">
+            </div>
+            <button type="button" class="search-bar__filter" aria-label="Filter notifications">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/>
+                <path d="M1 14h6M9 8h6M17 16h6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <p class="notif-empty" id="notif-empty" hidden>No notifications match your search.</p>
+
+      <section class="notif-group" aria-labelledby="today-label" data-group="today">
+        <div class="notif-group__head">
+          <h2 class="notif-group__label" id="today-label">Today</h2>
+          <div class="notif-group__line" aria-hidden="true"></div>
+        </div>
+        <ul class="notif-list" id="notif-today-list">
+          <li>
+            <button type="button" class="notif-item is-highlighted" data-filter-tags="all recent unread" data-search="new event available posted">
+              <span class="notif-item__icon notif-item__icon--blue" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </span>
+              <span class="notif-item__body">
+                <span class="notif-item__title">New Event Available</span>
+                <span class="notif-item__desc">A new event, {Event Name}, has been posted.</span>
+              </span>
+              <span class="notif-item__time">Time ago</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="notif-item" data-filter-tags="all recent" data-search="event invitation invited">
+              <span class="notif-item__icon notif-item__icon--cyan" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/></svg>
+              </span>
+              <span class="notif-item__body">
+                <span class="notif-item__title">Event Invitation</span>
+                <span class="notif-item__desc">You've been invited to {Event Name}.</span>
+              </span>
+              <span class="notif-item__time">Time ago</span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section class="notif-group" aria-labelledby="yesterday-label" data-group="yesterday">
+        <div class="notif-group__head">
+          <h2 class="notif-group__label" id="yesterday-label">Yesterday</h2>
+          <div class="notif-group__line" aria-hidden="true"></div>
+        </div>
+        <ul class="notif-list" id="notif-yesterday-list">
+          <li>
+            <button type="button" class="notif-item" data-filter-tags="all" data-search="registration rejected not approved">
+              <span class="notif-item__icon notif-item__icon--red" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+              </span>
+              <span class="notif-item__body">
+                <span class="notif-item__title">Registration Rejected</span>
+                <span class="notif-item__desc">Your registration request was not approved.</span>
+              </span>
+              <span class="notif-item__time">Time ago</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="notif-item" data-filter-tags="all unread" data-search="additional documents required upload files">
+              <span class="notif-item__icon notif-item__icon--gold" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              </span>
+              <span class="notif-item__body">
+                <span class="notif-item__title">Additional Documents Required</span>
+                <span class="notif-item__desc">Please upload the requested files.</span>
+              </span>
+              <span class="notif-item__time">Time ago</span>
+            </button>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var app = document.querySelector('.app');
+      var toggle = document.getElementById('sidebar-toggle');
+      var collapse = document.getElementById('sidebar-collapse');
+      var storageKey = 'dc_sidebar_collapsed';
+
+      function setSidebarCollapsed(collapsed) {
+        app.classList.toggle('is-sidebar-collapsed', collapsed);
+        localStorage.setItem(storageKey, collapsed);
+      }
+
+      if (localStorage.getItem(storageKey) === 'true' && window.innerWidth > 900) {
+        setSidebarCollapsed(true);
+      }
+
+      collapse.addEventListener('click', function () {
+        if (window.innerWidth <= 900) return;
+        setSidebarCollapsed(true);
+      });
+
+      toggle.addEventListener('click', function () {
+        if (window.innerWidth <= 900) return;
+        setSidebarCollapsed(false);
+      });
+
+      var tabs = document.querySelectorAll('.notif-tab');
+      var items = document.querySelectorAll('.notif-item');
+      var groups = document.querySelectorAll('.notif-group');
+      var searchInput = document.getElementById('notif-search');
+      var emptyEl = document.getElementById('notif-empty');
+      var activeFilter = 'all';
+
+      function applyFilters() {
+        var query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        var visibleCount = 0;
+
+        items.forEach(function (item) {
+          var tags = (item.getAttribute('data-filter-tags') || '').split(/\s+/);
+          var searchText = item.getAttribute('data-search') || '';
+          var title = item.querySelector('.notif-item__title').textContent.toLowerCase();
+          var desc = item.querySelector('.notif-item__desc').textContent.toLowerCase();
+          var matchesFilter = activeFilter === 'all' || tags.indexOf(activeFilter) !== -1;
+          var matchesSearch = !query || searchText.indexOf(query) !== -1 || title.indexOf(query) !== -1 || desc.indexOf(query) !== -1;
+          var show = matchesFilter && matchesSearch;
+          item.closest('li').hidden = !show;
+          if (show) visibleCount++;
+        });
+
+        groups.forEach(function (group) {
+          var listItems = group.querySelectorAll('.notif-list > li');
+          var groupVisible = false;
+          listItems.forEach(function (li) {
+            if (!li.hidden) groupVisible = true;
+          });
+          group.hidden = !groupVisible;
+        });
+
+        emptyEl.hidden = visibleCount > 0;
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) {
+            t.classList.remove('is-active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('is-active');
+          tab.setAttribute('aria-selected', 'true');
+          activeFilter = tab.getAttribute('data-filter') || 'all';
+          applyFilters();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+      }
+
+      items.forEach(function (item) {
+        item.addEventListener('click', function () {
+          item.classList.remove('is-highlighted');
+        });
+      });
+
+      try {
+        var profileRaw = localStorage.getItem('dc_profile_info');
+        if (profileRaw) {
+          var profile = JSON.parse(profileRaw);
+          if (profile.name) {
+            var nameEl = document.querySelector('.main__user-name');
+            if (nameEl) nameEl.textContent = profile.name;
+          }
+        }
+      } catch (err) { /* ignore */ }
+    })();
+  </script>
+</body>
+</html>

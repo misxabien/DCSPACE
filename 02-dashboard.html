@@ -119,13 +119,13 @@
       .sidebar__user-trigger {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
         width: 100%;
         margin: 0;
-        padding: 6px 8px 6px 4px;
+        padding: 4px 6px 4px 3px;
         border: none;
         background: rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
+        border-radius: 10px;
         cursor: pointer;
         text-align: left;
         font: inherit;
@@ -157,13 +157,13 @@
 
       .sidebar__user-chevron {
         flex-shrink: 0;
-        width: 28px;
-        height: 28px;
+        width: 22px;
+        height: 22px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        border: 1.25px solid rgba(255, 255, 255, 0.55);
         color: #fff;
         transition: transform 0.2s ease;
       }
@@ -180,10 +180,10 @@
         position: absolute;
         left: 0;
         right: -4px;
-        top: calc(100% + 8px);
+        top: calc(100% + 6px);
         z-index: 80;
-        padding: 8px;
-        border-radius: 14px;
+        padding: 6px;
+        border-radius: 12px;
         background: linear-gradient(180deg, #aac6fa 0%, var(--sidebar-bg) 42%, var(--sidebar-bg-deep) 100%);
         border: 1px solid rgba(255, 255, 255, 0.35);
         box-shadow: 0 10px 28px rgba(45, 95, 170, 0.35);
@@ -196,13 +196,13 @@
       .sidebar__user-link {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px 14px;
-        border-radius: 12px;
+        gap: 10px;
+        padding: 9px 11px;
+        border-radius: 10px;
         text-decoration: none;
         color: #fff;
         font-weight: 700;
-        font-size: 0.9375rem;
+        font-size: 0.875rem;
         letter-spacing: 0.02em;
         transition: background 0.15s ease;
       }
@@ -217,26 +217,26 @@
       }
 
       .sidebar__user-link svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         flex-shrink: 0;
         opacity: 0.95;
       }
 
       .sidebar__avatar {
-        width: 56px;
-        height: 56px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         object-fit: cover;
         flex-shrink: 0;
-        border: 2px solid rgba(255, 255, 255, 0.45);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        border: 1.5px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
       }
 
       .sidebar__hello {
         color: #fff;
         font-weight: 800;
-        font-size: 1.125rem;
+        font-size: 0.9375rem;
         letter-spacing: 0.01em;
         line-height: 1.25;
       }
@@ -244,8 +244,8 @@
       .sidebar__role {
         color: rgba(255, 255, 255, 0.92);
         font-weight: 500;
-        font-size: 0.8125rem;
-        margin-top: 4px;
+        font-size: 0.6875rem;
+        margin-top: 2px;
       }
 
       .sidebar__menu-btn {
@@ -648,8 +648,8 @@
               <img
                 class="sidebar__avatar"
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=128&h=128&fit=crop&crop=faces"
-                width="56"
-                height="56"
+                width="44"
+                height="44"
                 alt="Misxa profile photo"
               />
               <span class="sidebar__user-text">
@@ -657,13 +657,13 @@
                 <span class="sidebar__role">Faculty</span>
               </span>
               <span class="sidebar__user-chevron" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </span>
             </button>
             <div id="sidebar-user-menu" class="sidebar__user-panel" role="menu" hidden>
-              <a class="sidebar__user-link" role="menuitem" href="#">
+              <a class="sidebar__user-link" role="menuitem" href="./10-myprofile.html">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z" />
                 </svg>
@@ -696,9 +696,8 @@
           <ul class="nav">
             <li><a class="is-active" href="./02-dashboard.html" aria-current="page">Dashboard</a></li>
             <li><a href="./04-events.html">Events</a></li>
-            <li><a href="./06-attendance.html">Attendance</a></li>
-            <li><a href="./07-certificates.html">Certificates</a></li>
-            <li><a href="./08-organize.html">Organize</a></li>
+            <li><a href="./22-attendance.html">Attendance</a></li>
+            <li><a href="./26-certificates.html">Certificates</a></li>
           </ul>
         </nav>
 

@@ -1,536 +1,491 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DC Space | Login</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    html,
+    body {
+      height: 100%;
+    }
 
-    <style>
-      :root {
-        --bg-1: #d7e7ff;
-        --bg-2: #a9c7ff;
-        --card: #fbf7ef;
-        --text: #2a2a2a;
-        --muted: rgba(42, 42, 42, 0.55);
-        --border: rgba(42, 42, 42, 0.26);
-        --line: rgba(42, 42, 42, 0.18);
-        --blue: #3f82f5;
-        --blue-2: #2f73ef;
-        --pill: #e7efff;
-        --shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
+    :root {
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --blue-ring: rgba(68, 138, 255, 0.15);
+      --blue-shadow: rgba(68, 138, 255, 0.28);
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        #DBE8FF 0%,
+        #8AB6FF 27%,
+        #448AFF 50%,
+        #8AB6FF 77%,
+        #DBE8FF 100%
+      );
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 40px;
+    }
+
+    .page-inner {
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* ── Left branding ── */
+    .branding {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 12px 16px;
+      gap: 0;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      line-height: 0;
+      margin-bottom: -40px;
+    }
+    @keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+.logo {
+  width: 280px;
+  height: auto;
+  display: block;
+  margin: 0;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 6px 12px rgba(0, 40, 80, 0.12));
+  animation: logoFloat 3s ease-in-out infinite;  /* add this line */
+}
+
+    .branding__copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-top: -8px;
+    }
+
+    .tagline {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.15;
+      margin: 0;
+      color: #fff;
+    }
+
+    .description {
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.3;
+      max-width: 420px;
+      margin: 0;
+      color: #fff;
+      text-align: center;
+    }
+
+    /* ── Sign-in card ── */
+    .signin-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signin-card {
+      width: 100%;
+      max-width: 390px;
+      background: #FFFEF4;
+      border-radius: 22px;
+      padding: 32px 34px 24px;
+      box-shadow: 0 10px 28px rgba(0, 40, 90, 0.14);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--blue);
+      text-align: center;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #8e8e8e;
+      margin-bottom: 5px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      color: #b0b0b0;
+    }
+
+    .input-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      height: 38px;
+      padding: 0 12px 0 38px;
+      border: 1px solid #d8d8d8;
+      border-radius: 10px;
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: #333;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input-wrap input::placeholder {
+      color: #b8b8b8;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+      margin: -2px 0 14px;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-signin {
+      width: 100%;
+      height: 40px;
+      border: none;
+      border-radius: 10px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      margin-bottom: 12px;
+    }
+
+    .btn-signin:hover {
+      background: var(--blue-dark);
+    }
+
+    .register-text {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 400;
+      color: #8e8e8e;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .register-text a {
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .register-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Role toggle ── */
+    .role-toggle {
+      display: flex;
+      width: 100%;
+      margin: 0 auto;
+      background: #f0f0f0;
+      border-radius: 999px;
+      padding: 4px;
+      gap: 0;
+    }
+
+    .role-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      border: none;
+      border-radius: 999px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: var(--blue);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .role-btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .role-btn.active {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 4px 10px var(--blue-shadow);
+    }
+
+    .role-btn.active svg {
+      fill: #fff;
+      stroke: #fff;
+    }
+
+    .role-btn.inactive {
+      color: var(--blue);
+    }
+
+    .role-btn.inactive svg {
+      fill: none;
+      stroke: var(--blue);
+    }
+
+    @media (max-width: 1024px) {
+      .page-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
       }
+    }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        height: 100%;
-      }
-
-      body {
-        margin: 0;
-        font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        color: var(--text);
-        background: radial-gradient(1200px 600px at 55% 0%, rgba(255, 255, 255, 0.9), transparent 55%),
-          linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-      }
-
+    @media (max-width: 480px) {
       .page {
-        min-height: 100vh;
-        padding: 56px 46px;
-        display: grid;
-        place-items: center;
+        padding: 32px 20px;
       }
 
-      .layout {
-        width: min(1180px, 100%);
-        display: grid;
-        grid-template-columns: 1fr 520px;
-        align-items: center;
-        gap: 34px;
+      .signin-card {
+        padding: 36px 28px 28px;
       }
 
-      .brand {
-        display: grid;
-        justify-items: center;
-        text-align: center;
-        padding: 20px 10px;
+      .branding {
+        gap: 0;
       }
 
-      .brand__logo-wrap {
-        width: 430px;
-        height: 200px;
-        display: grid;
-        place-items: center;
+      .logo-wrap {
+        margin-bottom: -30px;
       }
 
-      .brand__logo {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: center;
-        filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2));
+      .branding__copy {
+        gap: 4px;
       }
 
-      .brand__headline {
-        margin-top: 34px;
-        font-size: 28px;
-        font-weight: 700;
-        letter-spacing: 0.6px;
-        color: rgba(255, 255, 255, 0.92);
-      }
-
-      .brand__sub {
-        margin-top: 6px;
-        max-width: 520px;
-        font-size: 12px;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.82);
-      }
-
-      .card {
-        width: 520px;
-        border-radius: 22px;
-        background: var(--card);
-        box-shadow: var(--shadow);
-        padding: 28px 34px 26px;
-        justify-self: start;
-        margin-left: -22px;
-      }
-
-      .btn {
-        appearance: none;
-        border: 0;
-        background: transparent;
-        font: inherit;
-        color: inherit;
-        cursor: pointer;
-      }
-
-      .google {
-        width: 100%;
-        height: 54px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        font-weight: 500;
-        color: rgba(42, 42, 42, 0.75);
-        background: rgba(255, 255, 255, 0.35);
-      }
-
-      .divider {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        gap: 14px;
-        margin: 18px 0 16px;
-        color: rgba(42, 42, 42, 0.55);
-        font-weight: 600;
-        font-size: 12px;
-      }
-
-      .divider::before,
-      .divider::after {
-        content: "";
-        height: 1px;
-        background: var(--line);
-      }
-
-      .field {
-        position: relative;
-        display: block;
-        width: 100%;
-        margin-top: 14px;
-      }
-
-      .input {
-        width: 100%;
-        height: 54px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.35);
-        padding: 0 48px 0 46px;
-        font-size: 14px;
-        font-weight: 500;
-        outline: none;
-      }
-
-      .field--password .input {
-        padding-right: 56px;
-      }
-
-      .input::placeholder {
-        color: rgba(42, 42, 42, 0.38);
-        font-weight: 500;
-      }
-
-      .icon-left {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 18px;
-        height: 18px;
-        color: rgba(42, 42, 42, 0.52);
-        pointer-events: none;
-        left: 16px;
-      }
-
-      .eye {
-        position: absolute;
-        top: 50%;
-        right: 12px;
-        transform: translateY(-50%);
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        color: rgba(42, 42, 42, 0.52);
-      }
-
-      .eye svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .actions {
-        display: grid;
-        justify-items: end;
-        margin-top: 10px;
-      }
-
-      .link {
+      .description {
+        max-width: 280px;
         font-size: 11px;
-        font-weight: 600;
-        color: var(--blue);
-        text-decoration: none;
       }
 
-      .link:hover {
-        text-decoration: underline;
+      .tagline {
+        font-size: 18px;
       }
 
-      .primary {
-        margin-top: 14px;
+      .logo {
+        width: 260px;
+      }
+
+      .role-toggle {
         width: 100%;
-        height: 56px;
-        border-radius: 12px;
-        background: var(--blue);
-        color: white;
-        font-weight: 700;
-        letter-spacing: 0.4px;
-        box-shadow: 0 10px 16px rgba(63, 130, 245, 0.35);
       }
 
-      .primary:hover {
-        background: var(--blue-2);
+      .role-btn {
+        flex: 1;
+        padding: 10px 14px;
       }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="page-inner">
+      <section class="branding" aria-label="DC Space branding">
+        <div class="logo-wrap">
+          <img
+            src="finallogo.png"
+            alt="DC Space logo"
+            class="logo"
+            width="280"
+            height="140"
+          >
+        </div>
+        <div class="branding__copy">
+          <h1 class="tagline">TAP. ATTEND. GET CERTIFIED.</h1>
+          <p class="description">
+            An AI-assisted RFID system designed to simplify event tracking<br>
+            and automate certificate issuance.
+          </p>
+        </div>
+      </section>
 
-      .below {
-        margin-top: 14px;
-        text-align: center;
-        font-size: 11px;
-        font-weight: 500;
-        color: rgba(42, 42, 42, 0.65);
-      }
+      <section class="signin-section" aria-label="Sign in form">
+        <div class="signin-card">
+          <h2 class="card-title">SIGN IN TO DC SPACE!</h2>
 
-      .below a {
-        margin-left: 6px;
-        font-weight: 700;
-        color: var(--blue);
-        text-decoration: none;
-      }
-
-      .below a:hover {
-        text-decoration: underline;
-      }
-
-      .role {
-        margin-top: 16px;
-        width: 340px;
-        height: 46px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.45);
-        border: 1px solid rgba(42, 42, 42, 0.14);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        padding: 6px;
-        gap: 6px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .role__btn {
-        height: 100%;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        font-weight: 700;
-        font-size: 12px;
-        color: rgba(42, 42, 42, 0.5);
-      }
-
-      .role__btn[aria-pressed="true"] {
-        background: var(--blue);
-        color: white;
-        box-shadow: 0 8px 14px rgba(63, 130, 245, 0.32);
-      }
-
-      .role__btn svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      @media (max-width: 1060px) {
-        .layout {
-          grid-template-columns: 1fr;
-          justify-items: center;
-          gap: 34px;
-        }
-
-        .brand {
-          padding-top: 0;
-        }
-
-        .card {
-          width: min(520px, 100%);
-          margin-left: 0;
-        }
-      }
-
-      @media (max-width: 560px) {
-        .page {
-          padding: 30px 16px;
-        }
-
-        .brand__logo {
-          transform: scale(0.92);
-        }
-
-        .brand__headline {
-          font-size: 22px;
-        }
-
-        .role {
-          width: 100%;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <main class="page">
-      <section class="layout" aria-label="Login layout">
-        <aside class="brand" aria-label="Brand section">
-          <div class="brand__logo-wrap">
-            <img
-              class="brand__logo"
-              src="./assets/logo-dc-space.png"
-              alt="DC Space logo"
-              onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;border-radius:18px;background:rgba(255,255,255,.16);border:1px dashed rgba(255,255,255,.45);display:grid;place-items:center;color:rgba(255,255,255,.9);font-weight:600;font-size:14px;letter-spacing:.3px;&quot;>Add logo at HTML/assets/logo-dc-space.png</div>';"
-            />
-          </div>
-          <div class="brand__headline">TAP. ATTEND. GET CERTIFIED.</div>
-          <div class="brand__sub">
-            An AI-assisted RFID system designed to simplify event tracking and automate certificate
-            issuance.
-          </div>
-        </aside>
-
-        <section class="card" aria-label="Login card">
-          <button class="btn google" type="button" aria-label="Continue with Google">
-            <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
-              <path
-                fill="#FFC107"
-                d="M43.611 20.083H42V20H24v8h11.303C33.653 32.657 29.236 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.967 3.033l5.657-5.657C34.72 6.053 29.617 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.651-.389-3.917z"
-              />
-              <path
-                fill="#FF3D00"
-                d="M6.306 14.691l6.571 4.819C14.655 16.108 19.001 12 24 12c3.059 0 5.842 1.154 7.967 3.033l5.657-5.657C34.72 6.053 29.617 4 24 4 16.318 4 9.656 8.336 6.306 14.691z"
-              />
-              <path
-                fill="#4CAF50"
-                d="M24 44c5.112 0 9.828-1.967 13.377-5.158l-6.174-5.227C29.297 35.091 26.756 36 24 36c-5.215 0-9.619-3.317-11.297-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
-              />
-              <path
-                fill="#1976D2"
-                d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.1 5.615h.001l6.174 5.227C36.941 39.243 44 34 44 24c0-1.341-.138-2.651-.389-3.917z"
-              />
-            </svg>
-            <span>Continue with SDCA Gmail Account</span>
-          </button>
-
-          <div class="divider" aria-hidden="true">OR</div>
-
-          <form action="./02-dashboard.html" method="get" autocomplete="on">
-            <label class="field field--password">
-              <span class="sr-only" style="position: absolute; left: -9999px">Email</span>
-              <span class="icon-left" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M4 6.5c0-1.105.895-2 2-2h12c1.105 0 2 .895 2 2v11c0 1.105-.895 2-2 2H6c-1.105 0-2-.895-2-2v-11Z"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M6.2 7.1 12 11.2l5.8-4.1"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <input class="input" name="email" type="email" placeholder="Email" required />
-            </label>
-
-            <label class="field">
-              <span class="sr-only" style="position: absolute; left: -9999px">Password</span>
-              <span class="icon-left" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M7 10V8.2C7 5.88 8.79 4 11 4h2c2.21 0 4 1.88 4 4.2V10"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M6.5 10h11A2.5 2.5 0 0 1 20 12.5v5A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-5A2.5 2.5 0 0 1 6.5 10Z"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-
-              <input
-                id="password"
-                class="input"
-                name="password"
-                type="password"
-                placeholder="Password"
-                autocomplete="current-password"
-                required
-              />
-
-              <button class="btn eye" type="button" id="togglePassword" aria-label="Show password">
-                <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path
-                    d="M2.3 12s3.4-7 9.7-7 9.7 7 9.7 7-3.4 7-9.7 7-9.7-7-9.7-7Z"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M12 15.4a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8Z"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                </svg>
-              </button>
-            </label>
-
-            <div class="actions">
-              <a class="link" href="#" aria-label="Forgot password">FORGOT PASSWORD?</a>
+          <form action="./09-home.html" method="get">
+            <div class="form-group">
+              <label for="email">Your School Email</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="M2 7l10 7 10-7"/>
+                  </svg>
+                </span>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your school email address"
+                  autocomplete="email"
+                  required
+                >
+              </div>
             </div>
 
-            <button class="btn primary" type="submit">SIGN IN</button>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="11" width="14" height="10" rx="2"/>
+                    <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+                  </svg>
+                </span>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                  required
+                >
+              </div>
+            </div>
+
+            <a href="./07-fpemail.html" class="forgot-link">Forgot your password?</a>
+
+            <button type="submit" class="btn-signin">SIGN IN</button>
           </form>
 
-          <div class="below">
-            Don't have an account?
-            <a href="#" aria-label="Register here">REGISTER HERE</a>
-          </div>
+          <p class="register-text">
+            Don't have an account? <a href="./02-create.html">REGISTER HERE</a>
+          </p>
 
-          <div class="role" role="group" aria-label="Role selection">
-            <button class="btn role__btn" type="button" id="roleStudent" aria-pressed="true">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M12 3 2.5 8l9.5 5 9.5-5L12 3Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M5.5 10.5V16c0 1.4 3 3.5 6.5 3.5s6.5-2.1 6.5-3.5v-5.5"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
+          <div class="role-toggle" role="group" aria-label="Select role">
+            <button type="button" class="role-btn active" data-role="student" aria-pressed="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M12 2 2 8.5v2.2L12 17l10-6.3V8.5L12 2zm0 2.8 6.8 4.3L12 13.2 5.2 9.1 12 4.8zM4 11.2V16l8 5 8-5v-4.8l-8 3.8-8-3.8z"/>
+                <rect x="10" y="14" width="4" height="6" rx="0.5"/>
               </svg>
               Student
             </button>
-            <button class="btn role__btn" type="button" id="roleFaculty" aria-pressed="false">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                />
-                <path
-                  d="M16.6 10.2a2.6 2.6 0 1 0 0-5.2 2.6 2.6 0 0 0 0 5.2Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                />
-                <path
-                  d="M4 20v-1.2c0-2.1 3-4 5-4s5 1.9 5 4V20"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M14.4 20v-1c0-1.7 2.1-3.2 3.6-3.2S22 17.3 22 19v1"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
+            <button type="button" class="role-btn inactive" data-role="faculty" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
               Faculty
             </button>
           </div>
-        </section>
+        </div>
       </section>
-    </main>
+    </div>
+  </main>
 
-    <script>
-      (function () {
-        const password = document.getElementById("password");
-        const toggle = document.getElementById("togglePassword");
-
-        const roleStudent = document.getElementById("roleStudent");
-        const roleFaculty = document.getElementById("roleFaculty");
-
-        function setRole(active) {
-          const isStudent = active === "student";
-          roleStudent.setAttribute("aria-pressed", String(isStudent));
-          roleFaculty.setAttribute("aria-pressed", String(!isStudent));
-        }
-
-        roleStudent.addEventListener("click", () => setRole("student"));
-        roleFaculty.addEventListener("click", () => setRole("faculty"));
-
-        toggle.addEventListener("click", () => {
-          const isPassword = password.type === "password";
-          password.type = isPassword ? "text" : "password";
-          toggle.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+  <script>
+    (function () {
+      const roleBtns = document.querySelectorAll('.role-btn');
+      roleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          roleBtns.forEach(function (b) {
+            b.classList.remove('active');
+            b.classList.add('inactive');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.remove('inactive');
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
         });
-      })();
-    </script>
-  </body>
+      });
+    })();
+  </script>
+</body>
 </html>
-

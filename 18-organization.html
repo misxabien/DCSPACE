@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space - Organization Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sidebar-bg: #DAE4F8; --main-bg: #FFFCF8; --blue: #448AFF; --text: #1a1a1a; --muted: #6b6b6b; --border: #448AFF; --card-hover: #FFEED5; --sidebar-width: 248px; --font: 'Montserrat', sans-serif; }
+    html, body { height: 100%; }
+    body { font-family: var(--font); background: var(--main-bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-width); flex-shrink: 0; background: var(--sidebar-bg); display: flex; flex-direction: column; padding: 28px 20px 32px; min-height: 100vh; transition: width 0.22s ease, padding 0.22s ease; position: relative; }
+    .sidebar__collapse { position: absolute; top: 14px; right: 12px; width: 34px; height: 34px; border: none; border-radius: 8px; background: transparent; color: var(--blue); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: background 0.15s ease; }
+    .sidebar__collapse:hover { background: rgba(68, 138, 255, 0.12); }
+    .sidebar__collapse svg { width: 22px; height: 22px; display: block; }
+    .app.is-sidebar-collapsed .sidebar__collapse { display: none; }
+    .sidebar__toggle { width: 54px; height: 54px; margin: 0 auto 18px; border: none; border-radius: 16px; background: rgba(68, 138, 255, 0.12); display: none; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s ease; }
+    .app.is-sidebar-collapsed .sidebar__toggle { display: flex; }
+    .sidebar__toggle:hover { background: rgba(68, 138, 255, 0.18); }
+    .sidebar__toggle img { width: 32px; height: 32px; object-fit: contain; filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%); }
+    .sidebar__brand { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 36px; }
+    .sidebar__logo { width: 120px; height: auto; display: block; filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%); margin-bottom: 4px; }
+    .sidebar__title { font-size: 15px; font-weight: 800; color: var(--blue); letter-spacing: 0.06em; }
+    .nav { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .nav a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--blue); font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.15s ease; }
+    .nav a svg { width: 20px; height: 20px; flex-shrink: 0; stroke: currentColor; fill: none; }
+    .nav a:hover:not(.is-active) { background: rgba(68, 138, 255, 0.12); }
+    .nav a.is-active { background: var(--blue); color: #fff; }
+    .nav a.is-active svg { stroke: #fff; }
+    .sidebar__spacer { flex: 1; min-height: 24px; }
+    .nav--bottom { margin-top: auto; padding-top: 16px; }
+    .app.is-sidebar-collapsed .sidebar { width: 102px; padding: 28px 12px 24px; }
+    .app.is-sidebar-collapsed .sidebar__brand { display: none; }
+    .app.is-sidebar-collapsed .nav a { justify-content: center; gap: 0; padding: 14px 0; font-size: 0; }
+    .app.is-sidebar-collapsed .nav a svg { width: 24px; height: 24px; }
+    .app.is-sidebar-collapsed .nav a.is-active { width: 56px; margin: 0 auto; }
+    .main { flex: 1; min-width: 0; overflow-y: auto; padding: 32px 40px 48px; }
+    .main__top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .main__greeting { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 700; color: var(--blue); line-height: 1.15; }
+    .main__tools { display: flex; align-items: center; gap: 14px; }
+    .tool-btn { width: 40px; height: 40px; border: none; border-radius: 50%; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--blue); transition: background 0.15s ease; }
+    .tool-btn:hover { background: rgba(68, 138, 255, 0.1); }
+    .tool-btn--avatar { background: #c5d9fc; }
+    .tool-btn--help { background: var(--blue); color: #fff; }
+    .tool-btn svg { width: 22px; height: 22px; }
+    .search-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .search-bar__field { flex: 1; display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 20px; background: rgba(68, 138, 255, 0.12); border: 1px solid rgba(68, 138, 255, 0.22); border-radius: 999px; }
+    .search-bar__field svg { width: 18px; height: 18px; color: var(--blue); flex-shrink: 0; opacity: 0.7; }
+    .search-bar__field input { flex: 1; border: none; outline: none; font-family: var(--font); font-size: 14px; color: var(--text); background: transparent; }
+    .search-bar__field input::placeholder { color: rgba(68, 138, 255, 0.55); font-weight: 500; }
+    .search-bar__filter { width: 46px; height: 46px; border: none; border-radius: 10px; background: #f5c842; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .search-bar__filter svg { width: 20px; height: 20px; stroke: #1a1a1a; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--blue); background: #fff; color: var(--blue); font-family: var(--font); font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.15s ease; }
+    .back-btn:hover { background: rgba(68, 138, 255, 0.1); }
+    .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
+    .section-head { margin-bottom: 16px; }
+    .section-head h2 { font-size: 18px; font-weight: 700; color: var(--blue); }
+    .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .event-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: background 0.18s ease, box-shadow 0.18s ease; }
+    .event-card:hover { background: var(--card-hover); box-shadow: 0 4px 16px rgba(68, 138, 255, 0.12); }
+    .event-card__media { position: relative; height: 110px; background: #fff; border-bottom: 1px solid rgba(68, 138, 255, 0.15); }
+    .event-card__bookmark { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.95); color: var(--blue); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(68, 138, 255, 0.15); }
+    .event-card__bookmark svg { width: 16px; height: 16px; }
+    .event-card__body { display: flex; gap: 14px; padding: 14px 16px 16px; }
+    .event-card__date { flex-shrink: 0; width: 52px; text-align: center; font-weight: 700; line-height: 1.1; }
+    .event-card__date-month { display: block; font-size: 11px; text-transform: uppercase; color: var(--text); letter-spacing: 0.04em; }
+    .event-card__date-day { display: block; font-size: 28px; color: var(--blue); line-height: 1; margin: 2px 0; }
+    .event-card__date-year { display: block; font-size: 11px; color: var(--muted); font-weight: 600; }
+    .event-card__info { flex: 1; min-width: 0; }
+    .event-card__name { font-size: 14px; font-weight: 700; color: var(--blue); margin-bottom: 6px; }
+    .event-card__venue { font-size: 12px; font-weight: 600; color: var(--blue); opacity: 0.85; margin-bottom: 2px; }
+    .event-card__time { font-size: 12px; color: var(--blue); opacity: 0.7; font-weight: 500; }
+    @media (max-width: 900px) { .app { flex-direction: column; } .sidebar { width: 100%; min-height: auto; flex-direction: row; flex-wrap: wrap; padding: 20px; } .sidebar__brand { flex-direction: row; gap: 12px; margin-bottom: 0; width: 100%; } .sidebar__toggle, .sidebar__collapse { display: none !important; } .nav { flex-direction: row; flex-wrap: wrap; width: 100%; } .sidebar__spacer, .nav--bottom { display: none; } .app.is-sidebar-collapsed .sidebar { width: 100%; padding: 20px; } .app.is-sidebar-collapsed .sidebar__brand { display: flex; } .app.is-sidebar-collapsed .nav a { font-size: 14px; gap: 12px; padding: 12px 16px; justify-content: flex-start; } .app.is-sidebar-collapsed .nav a.is-active { width: auto; margin: 0; } .event-grid { grid-template-columns: 1fr; } .main { padding: 24px 20px 40px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <button type="button" class="sidebar__collapse" id="sidebar-collapse" aria-label="Collapse sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="6.5" r="2.8" fill="currentColor" opacity="0.78"/><circle cx="17.5" cy="6.5" r="3.6" fill="currentColor"/><circle cx="6.5" cy="17.5" r="3.6" fill="currentColor"/><circle cx="17.5" cy="17.5" r="2.3" fill="currentColor" opacity="0.52"/></svg></button>
+      <button type="button" class="sidebar__toggle" id="sidebar-toggle" aria-label="Expand sidebar"><img src="finallogo.png" alt=""></button>
+      <div class="sidebar__brand"><img src="finallogo.png" alt="DC Space" class="sidebar__logo" width="120" height="60"><span class="sidebar__title">DC SPACE</span></div>
+      <nav aria-label="Primary"><ul class="nav">
+        <li><a href="./09-home.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9.5z"/></svg>Home</a></li>
+        <li><a href="./14-event.html" class="is-active" aria-current="page"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Events</a></li>
+        <li><a href="./22-attendance.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Attendance</a></li>
+        <li><a href="./29-saved.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Saved Events</a></li>
+        <li><a href="./26-certificates.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Certificates</a></li>
+      </ul></nav>
+      <div class="sidebar__spacer" aria-hidden="true"></div>
+      <ul class="nav nav--bottom"><li><a href="./33-feedbacl.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Submit Feedback</a></li><li><a href="./01-login.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log out</a></li></ul>
+    </aside>
+    <main class="main">
+      <div class="main__top">
+        <h1 class="main__greeting">Explore Events!</h1>
+        <div class="main__tools">
+          <a class="tool-btn tool-btn--avatar" href="./36-profile.html" aria-label="Profile"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/></svg></a>
+          <a class="tool-btn" href="./37-notif.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></a>
+          <button type="button" class="tool-btn tool-btn--help" aria-label="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></button>
+        </div>
+      </div>
+      <div class="search-bar"><div class="search-bar__field"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="search" placeholder="Search" aria-label="Search organization events"></div><button type="button" class="search-bar__filter" aria-label="Filter and sort"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4"/></svg></button></div>
+      <a class="back-btn" href="./14-event.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back to Explore Events</a>
+      <section class="section-head"><h2>Your Organization Events</h2></section>
+      <section class="event-grid" id="event-grid"></section>
+    </main>
+  </div>
+  <script src="events-data.js"></script>
+  <script src="event-card.js"></script>
+  <script>
+    (function () {
+      DCEvents.fillContainer('event-grid', { category: 'organization', limit: 6, detailContext: 'explore' });
+      var app = document.querySelector('.app');
+      var toggle = document.getElementById('sidebar-toggle');
+      var collapse = document.getElementById('sidebar-collapse');
+      var storageKey = 'dc_sidebar_collapsed';
+      function setSidebarCollapsed(collapsed) { app.classList.toggle('is-sidebar-collapsed', collapsed); localStorage.setItem(storageKey, collapsed); }
+      if (localStorage.getItem(storageKey) === 'true' && window.innerWidth > 900) { setSidebarCollapsed(true); }
+      collapse.addEventListener('click', function () { if (window.innerWidth <= 900) return; setSidebarCollapsed(true); });
+      toggle.addEventListener('click', function () { if (window.innerWidth <= 900) return; setSidebarCollapsed(false); });
+    })();
+  </script>
+</body>
+</html>

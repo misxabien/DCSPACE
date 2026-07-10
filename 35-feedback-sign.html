@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — Submit Feedback</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-bg: #DAE4F8;
+      --main-bg: #FFFCF8;
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --text: #1a1a1a;
+      --muted: #6b6b6b;
+      --brown-border: #d4b896;
+      --card-hover: #FFEED5;
+      --star-filled: #f5c842;
+      --star-outline: #f5c842;
+      --sidebar-width: 248px;
+      --font: 'Montserrat', sans-serif;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: var(--font);
+      background: var(--main-bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 20px 32px;
+      min-height: 100vh;
+      position: relative;
+      transition: width 0.22s ease, padding 0.22s ease;
+    }
+
+    .sidebar__collapse {
+      position: absolute;
+      top: 14px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--blue);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar__collapse:hover { background: rgba(68, 138, 255, 0.12); }
+    .sidebar__collapse svg { width: 22px; height: 22px; display: block; }
+    .app.is-sidebar-collapsed .sidebar__collapse { display: none; }
+
+    .sidebar__toggle {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 18px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(68, 138, 255, 0.12);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .app.is-sidebar-collapsed .sidebar__toggle { display: flex; }
+
+    .sidebar__toggle img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%);
+    }
+
+    .sidebar__brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .sidebar__logo {
+      width: 120px;
+      filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%);
+      margin-bottom: 4px;
+    }
+
+    .sidebar__title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: 0.06em;
+    }
+
+    .nav { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .nav a svg { width: 20px; height: 20px; flex-shrink: 0; stroke: currentColor; fill: none; }
+    .nav a:hover:not(.is-active) { background: rgba(68, 138, 255, 0.12); }
+    .nav a.is-active { background: var(--blue); color: #fff; }
+    .nav a.is-active svg { stroke: #fff; }
+
+    .sidebar__spacer { flex: 1; min-height: 24px; }
+    .nav--bottom { margin-top: auto; padding-top: 16px; }
+
+    .app.is-sidebar-collapsed .sidebar { width: 102px; padding: 28px 12px 24px; }
+    .app.is-sidebar-collapsed .sidebar__brand { display: none; }
+    .app.is-sidebar-collapsed .nav a { justify-content: center; gap: 0; padding: 14px 0; font-size: 0; }
+    .app.is-sidebar-collapsed .nav a svg { width: 24px; height: 24px; }
+    .app.is-sidebar-collapsed .nav a.is-active { width: 56px; margin: 0 auto; }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      padding: 32px 40px 48px;
+    }
+
+    .main__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .main__greeting {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.15;
+    }
+
+    .main__tools {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .main__user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .tool-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .tool-btn:hover { background: rgba(68, 138, 255, 0.1); }
+    .tool-btn--avatar { background: #c5d9fc; }
+    .tool-btn--help { background: var(--blue); color: #fff; }
+    .tool-btn svg { width: 22px; height: 22px; }
+
+    .sign-intro { margin-bottom: 28px; }
+
+    .sign-intro__title {
+      font-size: clamp(1.5rem, 2.8vw, 2rem);
+      font-weight: 700;
+      color: #1a3a6e;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .sign-intro__subtitle {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .sign-form-card {
+      background: #fff;
+      border: 1px solid var(--brown-border);
+      border-radius: 14px;
+      padding: 28px 32px 32px;
+      margin-bottom: 28px;
+    }
+
+    .form-field { margin-bottom: 24px; }
+    .form-field:last-child { margin-bottom: 0; }
+
+    .form-field__label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .form-field__input {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid #d0d0d0;
+      border-radius: 10px;
+      background: #fff;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-field__input::placeholder { color: #b0b0b0; }
+
+    .form-field__input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(68, 138, 255, 0.12);
+    }
+
+    .form-field__select-wrap {
+      position: relative;
+    }
+
+    .form-field__select {
+      width: 100%;
+      height: 44px;
+      padding: 0 40px 0 16px;
+      border: 1px solid #d0d0d0;
+      border-radius: 10px;
+      background: #fff;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-field__select:invalid,
+    .form-field__select option[value=""] {
+      color: #b0b0b0;
+    }
+
+    .form-field__select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(68, 138, 255, 0.12);
+    }
+
+    .form-field__select-arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--muted);
+    }
+
+    .form-field__select-arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .form-stars {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-stars__btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      color: var(--star-outline);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease;
+    }
+
+    .form-stars__btn:hover { transform: scale(1.1); }
+
+    .form-stars__btn svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+    }
+
+    .form-stars__btn.is-filled svg {
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+    .form-media__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .form-media__label-group { flex: 1; }
+
+    .form-media__hint {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .form-media__add {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--blue);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+
+    .form-media__add:hover { background: rgba(68, 138, 255, 0.1); }
+    .form-media__add:disabled { opacity: 0.4; cursor: not-allowed; }
+    .form-media__add svg { width: 26px; height: 26px; }
+
+    .form-media__grid {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .form-media__slot {
+      width: 100px;
+      height: 100px;
+      border: 1px dashed #d0d0d0;
+      border-radius: 10px;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c0c0c0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-media__slot svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .form-media__slot.has-image {
+      border-style: solid;
+      border-color: var(--brown-border);
+      background: #fff;
+    }
+
+    .form-media__slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .form-media__slot-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-media__slot.has-image .form-media__slot-remove { display: flex; }
+    .form-media__slot.has-image svg { display: none; }
+
+    .form-field__textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 14px 16px;
+      border: 1px solid #d0d0d0;
+      border-radius: 10px;
+      background: #fff;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.55;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-field__textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(68, 138, 255, 0.12);
+    }
+
+    .sign-submit {
+      width: 100%;
+      max-width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: var(--sidebar-bg);
+      color: var(--blue);
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .sign-submit:hover { background: #c8d8f5; }
+    .sign-submit:active { transform: scale(0.99); }
+
+    .form-media__input { display: none; }
+
+    .main { position: relative; }
+
+    .success-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      background: rgba(255, 252, 248, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .success-overlay[hidden] { display: none; }
+
+    .success-modal {
+      width: 100%;
+      max-width: 460px;
+      padding: 36px 32px 32px;
+      background: #fff;
+      border: 1.5px solid var(--blue);
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(68, 138, 255, 0.14);
+    }
+
+    .success-modal__title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+
+    .success-modal__text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .app { flex-direction: column; }
+      .sidebar { width: 100%; min-height: auto; padding: 20px; }
+      .sidebar__collapse, .sidebar__toggle { display: none !important; }
+      .sidebar__spacer, .nav--bottom { display: none; }
+      .main { padding: 24px 20px 40px; }
+      .main__user-name { display: none; }
+      .sign-form-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <button type="button" class="sidebar__collapse" id="sidebar-collapse" aria-label="Collapse sidebar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="6.5" r="2.8" fill="currentColor" opacity="0.78"/><circle cx="17.5" cy="6.5" r="3.6" fill="currentColor"/><circle cx="6.5" cy="17.5" r="3.6" fill="currentColor"/><circle cx="17.5" cy="17.5" r="2.3" fill="currentColor"/></svg>
+      </button>
+      <button type="button" class="sidebar__toggle" id="sidebar-toggle" aria-label="Expand sidebar">
+        <img src="finallogo.png" alt="">
+      </button>
+      <div class="sidebar__brand">
+        <img src="finallogo.png" alt="DC Space" class="sidebar__logo" width="120" height="60">
+        <span class="sidebar__title">DC SPACE</span>
+      </div>
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="./09-home.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9.5z"/></svg>Home</a></li>
+          <li><a href="./14-event.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Events</a></li>
+          <li><a href="./22-attendance.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Attendance</a></li>
+          <li><a href="./29-saved.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Saved Events</a></li>
+          <li><a href="./26-certificates.html"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Certificates</a></li>
+        </ul>
+      </nav>
+      <div class="sidebar__spacer" aria-hidden="true"></div>
+      <ul class="nav nav--bottom">
+        <li>
+          <a href="./33-feedbacl.html" class="is-active" aria-current="page">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Submit Feedback
+          </a>
+        </li>
+        <li>
+          <a href="./01-login.html">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Log out
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <div class="main__top">
+        <h1 class="main__greeting">Submit Feedback</h1>
+        <div class="main__tools">
+          <span class="main__user-name">Your Name</span>
+          <a class="tool-btn tool-btn--avatar" href="./36-profile.html" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/></svg>
+          </a>
+          <a class="tool-btn" href="./37-notif.html" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </a>
+          <button type="button" class="tool-btn tool-btn--help" aria-label="Help">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sign-intro">
+        <h2 class="sign-intro__title">We'd love to hear from you!</h2>
+        <p class="sign-intro__subtitle">How was your experience? Let us know your thoughts.</p>
+      </div>
+
+      <form class="sign-form" id="feedback-form" novalidate>
+        <div class="sign-form-card">
+          <div class="form-field">
+            <label class="form-field__label" for="feedback-title">Feedback Title</label>
+            <input class="form-field__input" type="text" id="feedback-title" name="title" placeholder="Type Feedback Title" required>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="feedback-type">Feedback Type</label>
+            <div class="form-field__select-wrap">
+              <select class="form-field__select" id="feedback-type" name="type" required>
+                <option value="" selected disabled>Select</option>
+                <option value="general">General Feedback</option>
+                <option value="event">Event Feedback</option>
+                <option value="academic">Academic Feedback</option>
+                <option value="suggestion">Suggestion</option>
+              </select>
+              <span class="form-field__select-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <span class="form-field__label" id="rating-label">Rating</span>
+            <div class="form-stars" id="form-stars" role="group" aria-labelledby="rating-label">
+              <button type="button" class="form-stars__btn is-filled" data-rating="1" aria-label="1 star">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              </button>
+              <button type="button" class="form-stars__btn" data-rating="2" aria-label="2 stars">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              </button>
+              <button type="button" class="form-stars__btn" data-rating="3" aria-label="3 stars">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              </button>
+              <button type="button" class="form-stars__btn" data-rating="4" aria-label="4 stars">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              </button>
+              <button type="button" class="form-stars__btn" data-rating="5" aria-label="5 stars">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              </button>
+            </div>
+            <input type="hidden" name="rating" id="feedback-rating" value="1">
+          </div>
+
+          <div class="form-field">
+            <div class="form-media__head">
+              <div class="form-media__label-group">
+                <span class="form-field__label">Upload Media</span>
+                <p class="form-media__hint">*A maximum of 2 files may be submitted.</p>
+              </div>
+              <button type="button" class="form-media__add" id="media-add-btn" aria-label="Add image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <path d="M12 8v8M8 12h8"/>
+                  <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+                </svg>
+              </button>
+            </div>
+            <input type="file" class="form-media__input" id="media-input" accept="image/*" multiple>
+            <div class="form-media__grid" id="media-grid">
+              <div class="form-media__slot" data-slot="0" aria-label="Media placeholder 1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+                <button type="button" class="form-media__slot-remove" aria-label="Remove image">&times;</button>
+              </div>
+              <div class="form-media__slot" data-slot="1" aria-label="Media placeholder 2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+                <button type="button" class="form-media__slot-remove" aria-label="Remove image">&times;</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="feedback-comment">Detailed Comment</label>
+            <textarea class="form-field__textarea" id="feedback-comment" name="comment" placeholder=""></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="sign-submit">Send Feedback</button>
+      </form>
+
+      <div class="success-overlay" id="success-overlay" hidden>
+        <div class="success-modal" role="dialog" aria-labelledby="success-title" aria-modal="true" aria-describedby="success-desc">
+          <h2 class="success-modal__title" id="success-title">Thank you for sharing your event feedback.</h2>
+          <p class="success-modal__text" id="success-desc">Your response has been received successfully.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var app = document.querySelector('.app');
+      var toggle = document.getElementById('sidebar-toggle');
+      var collapse = document.getElementById('sidebar-collapse');
+      var storageKey = 'dc_sidebar_collapsed';
+
+      function setSidebarCollapsed(collapsed) {
+        app.classList.toggle('is-sidebar-collapsed', collapsed);
+        localStorage.setItem(storageKey, collapsed);
+      }
+
+      if (localStorage.getItem(storageKey) === 'true' && window.innerWidth > 900) {
+        setSidebarCollapsed(true);
+      }
+
+      collapse.addEventListener('click', function () {
+        if (window.innerWidth <= 900) return;
+        setSidebarCollapsed(true);
+      });
+
+      toggle.addEventListener('click', function () {
+        if (window.innerWidth <= 900) return;
+        setSidebarCollapsed(false);
+      });
+
+      var starBtns = document.querySelectorAll('.form-stars__btn');
+      var ratingInput = document.getElementById('feedback-rating');
+      var currentRating = 1;
+
+      function setRating(value) {
+        currentRating = value;
+        ratingInput.value = String(value);
+        starBtns.forEach(function (btn) {
+          var r = Number(btn.getAttribute('data-rating'));
+          btn.classList.toggle('is-filled', r <= value);
+        });
+      }
+
+      starBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setRating(Number(btn.getAttribute('data-rating')));
+        });
+      });
+
+      var mediaInput = document.getElementById('media-input');
+      var mediaAddBtn = document.getElementById('media-add-btn');
+      var slots = document.querySelectorAll('.form-media__slot');
+      var uploadedCount = 0;
+      var maxFiles = 2;
+
+      function updateAddButton() {
+        mediaAddBtn.disabled = uploadedCount >= maxFiles;
+      }
+
+      function getNextEmptySlot() {
+        for (var i = 0; i < slots.length; i++) {
+          if (!slots[i].classList.contains('has-image')) return slots[i];
+        }
+        return null;
+      }
+
+      function addImageToSlot(slot, file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var existing = slot.querySelector('img');
+          if (existing) existing.remove();
+          var img = document.createElement('img');
+          img.src = e.target.result;
+          img.alt = 'Uploaded media';
+          slot.appendChild(img);
+          slot.classList.add('has-image');
+          uploadedCount++;
+          updateAddButton();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      mediaAddBtn.addEventListener('click', function () {
+        if (uploadedCount < maxFiles) mediaInput.click();
+      });
+
+      mediaInput.addEventListener('change', function () {
+        var files = Array.from(mediaInput.files || []);
+        files.forEach(function (file) {
+          if (uploadedCount >= maxFiles) return;
+          var slot = getNextEmptySlot();
+          if (slot) addImageToSlot(slot, file);
+        });
+        mediaInput.value = '';
+      });
+
+      slots.forEach(function (slot) {
+        var removeBtn = slot.querySelector('.form-media__slot-remove');
+        removeBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var img = slot.querySelector('img');
+          if (img) img.remove();
+          slot.classList.remove('has-image');
+          uploadedCount = Math.max(0, uploadedCount - 1);
+          updateAddButton();
+        });
+      });
+
+      updateAddButton();
+
+      document.getElementById('feedback-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var overlay = document.getElementById('success-overlay');
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+      });
+
+      var successOverlay = document.getElementById('success-overlay');
+      var successModal = successOverlay.querySelector('.success-modal');
+
+      successModal.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      successOverlay.addEventListener('click', function () {
+        window.location.href = './33-feedbacl.html';
+      });
+    })();
+  </script>
+</body>
+</html>

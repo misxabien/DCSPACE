@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Space — Account Set Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    :root {
+      --blue: #448AFF;
+      --blue-dark: #3a7aee;
+      --blue-btn: #3d82f0;
+      --cream: #FFFEF4;
+      --text: #1a1a1a;
+      --muted: #8e8e8e;
+      --border: #1a1a1a;
+      --placeholder: #b0b0b0;
+      --required: #e53935;
+      --blue-ring: rgba(68, 138, 255, 0.15);
+      --strength-weak: #e53935;
+      --strength-medium: #f5a623;
+      --strength-strong: #43a047;
+      --match-ok: #43a047;
+      --match-error: #e53935;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        #DBE8FF 0%,
+        #8AB6FF 27%,
+        #448AFF 50%,
+        #8AB6FF 77%,
+        #DBE8FF 100%
+      );
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(calc(550px + 112px), 1fr);
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 48px 32px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      line-height: 0;
+      margin-bottom: -30px;
+    }
+
+    .logo {
+      width: 260px;
+      height: auto;
+      display: block;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 6px 12px rgba(0, 40, 80, 0.12));
+    }
+
+    .greeting {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 28px;
+      opacity: 0.95;
+    }
+
+    .btn-signin-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 175px;
+      height: 40px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue-btn);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 50, 120, 0.22);
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .btn-signin-link:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-signin-link:active {
+      transform: scale(0.99);
+    }
+
+    .form-panel {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      background: var(--cream);
+      border-radius: 0;
+      box-shadow: -12px 0 40px rgba(0, 40, 90, 0.1);
+      padding: 36px 56px 40px 56px;
+      margin-left: -24px;
+      min-height: 100vh;
+    }
+
+    .form-inner {
+      width: 550px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .page-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 26px;
+      line-height: 1.15;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .form-inner form {
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .req {
+      color: var(--required);
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 42px;
+      padding: 0 42px 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-group input::placeholder {
+      color: var(--placeholder);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: #b0b0b0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .toggle-password svg {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .toggle-password:hover {
+      color: var(--text);
+    }
+
+    .toggle-password .icon-eye-off {
+      display: block;
+    }
+
+    .toggle-password .icon-eye-on {
+      display: none;
+    }
+
+    .toggle-password.is-visible .icon-eye-off {
+      display: none;
+    }
+
+    .toggle-password.is-visible .icon-eye-on {
+      display: block;
+    }
+
+    .strength-wrap {
+      margin-top: 10px;
+    }
+
+    .strength-checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 14px;
+      list-style: none;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .strength-checklist li {
+      position: relative;
+      padding-left: 14px;
+      line-height: 1.35;
+    }
+
+    .strength-checklist li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #d3cec1;
+      transition: background-color 0.22s ease;
+    }
+
+    .strength-checklist li.is-met {
+      color: var(--text);
+    }
+
+    .strength-checklist.is-weak li.is-met::before {
+      background: var(--strength-weak);
+    }
+
+    .strength-checklist.is-medium li.is-met::before {
+      background: var(--strength-medium);
+    }
+
+    .strength-checklist.is-strong li.is-met::before {
+      background: var(--strength-strong);
+    }
+
+    .match-message {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.35;
+      display: none;
+    }
+
+    .match-message.is-match {
+      display: block;
+      color: var(--match-ok);
+    }
+
+    .match-message.is-mismatch {
+      display: block;
+      color: var(--match-error);
+    }
+
+    .form-footer {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .back-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.15s ease;
+    }
+
+    .back-link:hover {
+      color: var(--blue-dark);
+      text-decoration: underline;
+    }
+
+    .btn-create {
+      min-width: 140px;
+      height: 38px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 3px 10px rgba(68, 138, 255, 0.2);
+    }
+
+    .btn-create:hover {
+      background: var(--blue-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 40px 24px 32px;
+      }
+
+      .form-panel {
+        width: 100%;
+        margin-left: 0;
+        border-radius: 0;
+        padding: 36px 32px 40px;
+        min-height: auto;
+      }
+
+      .form-inner {
+        max-width: 100%;
+      }
+
+      .page-title {
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        width: 220px;
+      }
+
+      .greeting {
+        font-size: 22px;
+      }
+
+      .form-panel {
+        padding: 28px 24px 32px;
+      }
+
+      .form-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .back-link {
+        text-align: center;
+      }
+
+      .btn-create {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="hero" aria-label="Welcome">
+      <div class="logo-wrap">
+        <img
+          src="finallogo.png"
+          alt="DC Space logo"
+          class="logo"
+          width="260"
+          height="130"
+        >
+      </div>
+      <h1 class="greeting">Hello New Friend!</h1>
+      <p class="hero-sub">Already have an account?</p>
+      <a href="./01-login.html" class="btn-signin-link">
+        <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M19 12H5M12 19l-7-7 7-7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Sign In
+      </a>
+    </aside>
+
+    <section class="form-panel" aria-label="Account set up form">
+      <div class="form-inner">
+        <h2 class="page-title">Create Account</h2>
+        <h3 class="section-title">Account Set Up</h3>
+
+        <form action="./05verify.html" method="get" id="accountForm">
+          <div class="form-group">
+            <label for="rfidTagNumber">RFID Tag Number<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input
+                type="text"
+                id="rfidTagNumber"
+                name="rfidTagNumber"
+                placeholder="Tap your School ID"
+                autocomplete="off"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your SDCA email"
+                autocomplete="email"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Choose a strong password!"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password" data-target="password" aria-label="Show password">
+                <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                  <path d="M3.5 3.5l17 17"/>
+                </svg>
+                <svg class="icon-eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                </svg>
+              </button>
+            </div>
+            <div class="strength-wrap">
+              <ul class="strength-checklist" id="strengthChecklist">
+                <li data-check="length">At least 8 characters</li>
+                <li data-check="case">Uppercase and lowercase</li>
+                <li data-check="number">At least 1 number</li>
+                <li data-check="special">At least 1 special character</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Re-enter your password<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password" data-target="confirmPassword" aria-label="Show password">
+                <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                  <path d="M3.5 3.5l17 17"/>
+                </svg>
+                <svg class="icon-eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s4-5.5 10-5.5 10 5.5 10 5.5-4 5.5-10 5.5S2 12 2 12z"/>
+                  <circle cx="12" cy="12" r="2.25"/>
+                </svg>
+              </button>
+            </div>
+            <p class="match-message" id="matchMessage"></p>
+          </div>
+
+          <div class="form-footer">
+            <a href="./03-schooldetails.html" class="back-link">Go back to School Details</a>
+            <button type="submit" class="btn-create">Verify Account</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+  <script>
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.getAttribute('data-target'));
+        var isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.classList.toggle('is-visible', isHidden);
+        btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      });
+    });
+
+    var passwordInput = document.getElementById('password');
+    var confirmInput = document.getElementById('confirmPassword');
+    var strengthChecklist = document.getElementById('strengthChecklist');
+    var strengthChecklistItems = document.querySelectorAll('#strengthChecklist li');
+    var matchMessage = document.getElementById('matchMessage');
+
+    function getPasswordScore(password) {
+      var score = 0;
+      if (password.length >= 8) score += 1;
+      if (password.length >= 12) score += 1;
+      if (/[a-z]/.test(password)) score += 1;
+      if (/[A-Z]/.test(password)) score += 1;
+      if (/[0-9]/.test(password)) score += 1;
+      if (/[^A-Za-z0-9]/.test(password)) score += 1;
+      return score;
+    }
+
+    function updateStrengthMeter() {
+      var password = passwordInput.value;
+      var score = getPasswordScore(password);
+      var level = 'weak';
+      var checks = {
+        length: password.length >= 8,
+        case: /[a-z]/.test(password) && /[A-Z]/.test(password),
+        number: /[0-9]/.test(password),
+        special: /[^A-Za-z0-9]/.test(password)
+      };
+
+      if (!password) {
+        strengthChecklist.className = 'strength-checklist';
+        strengthChecklistItems.forEach(function (item) {
+          item.classList.remove('is-met');
+        });
+        return;
+      }
+
+      if (score <= 2) {
+        level = 'weak';
+      } else if (score <= 4) {
+        level = 'medium';
+      } else {
+        level = 'strong';
+      }
+
+      strengthChecklist.className = 'strength-checklist is-' + level;
+
+      strengthChecklistItems.forEach(function (item) {
+        var checkName = item.getAttribute('data-check');
+        item.classList.toggle('is-met', !!checks[checkName]);
+      });
+    }
+
+    function updateMatchMessage() {
+      var password = passwordInput.value;
+      var confirm = confirmInput.value;
+
+      matchMessage.className = 'match-message';
+
+      if (!confirm) {
+        return;
+      }
+
+      if (password === confirm && password.length > 0) {
+        matchMessage.textContent = 'Password matched!';
+        matchMessage.classList.add('is-match');
+      } else {
+        matchMessage.textContent = "Password doesn't match.";
+        matchMessage.classList.add('is-mismatch');
+      }
+    }
+
+    passwordInput.addEventListener('input', function () {
+      updateStrengthMeter();
+      updateMatchMessage();
+    });
+
+    confirmInput.addEventListener('input', updateMatchMessage);
+  </script>
+</body>
+</html>
