@@ -16,6 +16,7 @@
     var style = document.createElement('style');
     style.id = 'dc-bookmark-styles';
     style.textContent =
+      '.event-card__venue,.event-card__time{margin:0;}' +
       '.event-card__bookmark.is-saved{background:#FFE082;border:1.5px solid #448AFF;color:#448AFF;}' +
       '.event-card__bookmark.is-saved svg{fill:currentColor;stroke:currentColor;}';
     document.head.appendChild(style);

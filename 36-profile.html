@@ -15,11 +15,14 @@
       --main-bg: #FFFCF8;
       --blue: #448AFF;
       --blue-dark: #3a7aee;
+      --blue-ring: rgba(68, 138, 255, 0.18);
       --text: #1a1a1a;
       --muted: #6b6b6b;
       --card-hover: #FFEED5;
       --banner-bg: #c5d9fc;
       --pending-bg: #FFE082;
+      --input-bg: rgba(68, 138, 255, 0.06);
+      --input-radius: 10px;
       --sidebar-width: 248px;
       --font: 'Montserrat', sans-serif;
     }
@@ -156,8 +159,9 @@
     .main__greeting {
       font-size: clamp(1.75rem, 3vw, 2.25rem);
       font-weight: 700;
-      color: var(--text);
+      color: var(--blue);
       line-height: 1.15;
+      letter-spacing: -0.02em;
     }
 
     .main__tools {
@@ -183,22 +187,26 @@
 
     .tool-btn:hover { background: rgba(68, 138, 255, 0.1); }
     .tool-btn--avatar { background: #c5d9fc; }
-    .tool-btn--help { background: var(--blue); color: #fff; }
+    .tool-btn--help { background: #c5d9fc; color: #fff; }
+    .tool-btn--help:hover { background: #b5cffc; color: #fff; }
+    .tool-btn--help svg { width: 22px; height: 22px; flex-shrink: 0; }
     .tool-btn svg { width: 22px; height: 22px; }
+
+    .profile-hero {
+      position: relative;
+      margin-bottom: 88px;
+    }
 
     .profile-banner {
       position: relative;
-      height: 160px;
-      background: var(--banner-bg);
-      border-radius: 12px;
-      margin-bottom: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      height: 180px;
+      border-radius: 20px;
       overflow: hidden;
+      background: linear-gradient(135deg, #c5d9fc 0%, #dae4f8 45%, #e8eef8 100%);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      box-shadow: 0 8px 28px rgba(0, 40, 90, 0.08);
     }
 
     .profile-banner.has-photo {
@@ -210,169 +218,191 @@
     }
 
     .profile-banner__cover {
-      width: 280px;
-      height: 100px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #1a3a6e 0%, #0d2244 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(68, 138, 255, 0.18) 0%, transparent 42%),
+        radial-gradient(circle at 12% 80%, rgba(197, 217, 252, 0.9) 0%, transparent 48%),
+        linear-gradient(135deg, #b8cff9 0%, #dae4f8 55%, #f0f5fc 100%);
     }
 
     .profile-banner__cover-text {
-      font-size: 22px;
-      font-weight: 800;
-      color: #f5c842;
-      letter-spacing: 0.02em;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      display: none;
     }
 
     .profile-banner__upload {
       position: absolute;
       top: 16px;
       right: 16px;
-      padding: 8px 18px;
-      border: none;
-      border-radius: 8px;
-      background: var(--blue);
-      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1.5px solid rgba(255, 255, 255, 0.65);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(8px);
+      color: var(--blue);
       font-family: var(--font);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .profile-banner__upload:hover { background: var(--blue-dark); }
-
-    .profile-grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .profile-card {
+    .profile-banner__upload:hover {
       background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 14px rgba(68, 138, 255, 0.08);
-      padding: 28px 28px 32px;
+      border-color: #fff;
+      box-shadow: 0 4px 14px rgba(68, 138, 255, 0.18);
     }
 
-    .profile-card--main {
+    .profile-hero__identity {
+      position: absolute;
+      left: 28px;
+      bottom: -52px;
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      z-index: 2;
+    }
+
+    .profile-avatar-wrap {
       position: relative;
-      padding-top: 52px;
-    }
-
-    .profile-card--side {
-      padding: 22px 24px;
-      margin-bottom: 20px;
-    }
-
-    .profile-card--side:last-child { margin-bottom: 0; }
-
-    .profile-avatar-row {
-      margin-bottom: 28px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid rgba(68, 138, 255, 0.12);
+      flex-shrink: 0;
     }
 
     .profile-avatar {
-      width: 88px;
-      height: 88px;
+      width: 104px;
+      height: 104px;
       border-radius: 50%;
       object-fit: cover;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 10px rgba(68, 138, 255, 0.15);
+      border: 4px solid var(--main-bg);
+      box-shadow: 0 8px 24px rgba(0, 40, 90, 0.12);
       background: linear-gradient(135deg, #e8eef8 0%, #d4e2f7 100%);
     }
 
     .profile-avatar--placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
+      font-size: 40px;
     }
 
     .profile-avatar.is-photo {
       font-size: 0;
     }
 
-    .btn-upload {
-      padding: 8px 18px;
-      border: none;
-      border-radius: 8px;
+    .profile-avatar__upload {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--main-bg);
+      border-radius: 50%;
       background: var(--blue);
       color: #fff;
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 700;
       cursor: pointer;
-      transition: background 0.15s ease;
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, transform 0.15s ease;
     }
 
-    .btn-upload--card {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 1;
+    .profile-avatar__upload:hover {
+      background: var(--blue-dark);
+      transform: scale(1.05);
+    }
+
+    .profile-avatar__upload svg {
+      width: 14px;
+      height: 14px;
     }
 
     .profile-upload-input {
       display: none;
     }
 
-    .btn-upload:hover { background: var(--blue-dark); }
-
-    .profile-field {
-      margin-bottom: 20px;
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      align-items: start;
     }
 
-    .profile-field:last-child { margin-bottom: 0; }
+    .profile-card {
+      background: #fff;
+      border: 1.5px solid transparent;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 40, 90, 0.08);
+      padding: 28px 28px 32px;
+      transition: box-shadow 0.18s ease;
+    }
+
+    .profile-card:hover {
+      box-shadow: 0 12px 30px rgba(68, 138, 255, 0.1);
+    }
+
+    .profile-card--main {
+      padding-top: 28px;
+    }
+
+    .profile-card--side {
+      padding: 22px 22px 24px;
+      margin-bottom: 16px;
+    }
+
+    .profile-card--side:last-child { margin-bottom: 0; }
+
+    .profile-fields-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 20px;
+      margin-bottom: 8px;
+    }
+
+    .profile-fields-grid .profile-field--full {
+      grid-column: 1 / -1;
+    }
+
+    .profile-field {
+      margin-bottom: 0;
+    }
 
     .profile-field__label {
       display: block;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .profile-field__value {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
     }
 
     .profile-field__input {
       width: 100%;
-      border: 1px solid transparent;
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin: -4px 0 0;
+      height: 44px;
+      border: 1.5px solid transparent;
+      border-radius: var(--input-radius);
+      padding: 0 14px;
       font-family: var(--font);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text);
-      background: transparent;
+      background: var(--input-bg);
       transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
     }
 
     .profile-field__input:hover {
-      border-color: rgba(68, 138, 255, 0.25);
-      background: #fafafa;
+      background: rgba(68, 138, 255, 0.09);
     }
 
     .profile-field__input:focus {
       outline: none;
       border-color: var(--blue);
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(68, 138, 255, 0.12);
+      box-shadow: 0 0 0 3px var(--blue-ring);
     }
 
     .profile-field__input::placeholder {
@@ -380,10 +410,38 @@
       font-weight: 500;
     }
 
+    .profile-field__input:read-only {
+      pointer-events: none;
+      background: transparent;
+      border-color: transparent;
+      padding-left: 0;
+      cursor: default;
+    }
+
+    .profile-field__input:read-only:hover,
+    .profile-field__input:read-only:focus {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .profile-hero:not(.is-editing) .profile-banner__upload,
+    .profile-hero:not(.is-editing) .profile-avatar__upload {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .profile-hero.is-editing .profile-banner__upload,
+    .profile-hero.is-editing .profile-avatar__upload {
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.15s ease;
+    }
+
     .profile-save-row {
       margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(68, 138, 255, 0.12);
+      padding-top: 22px;
+      border-top: 1px solid rgba(68, 138, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -402,26 +460,55 @@
     }
 
     .btn-save-profile {
-      padding: 10px 22px;
+      padding: 11px 24px;
       border: none;
-      border-radius: 8px;
+      border-radius: 999px;
       background: var(--blue);
       color: #fff;
       font-family: var(--font);
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
     }
 
-    .btn-save-profile:hover { background: var(--blue-dark); }
+    .btn-save-profile:hover {
+      background: var(--blue-dark);
+      box-shadow: 0 6px 18px rgba(68, 138, 255, 0.28);
+      transform: translateY(-1px);
+    }
+
+    .btn-save-profile.is-editing {
+      background: var(--blue-dark);
+    }
 
     .profile-section-title {
-      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
       font-weight: 700;
-      color: var(--text);
-      margin: 28px 0 18px;
-      padding-top: 4px;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 32px 0 20px;
+    }
+
+    .profile-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(68, 138, 255, 0.14);
+    }
+
+    .profile-about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 20px;
+    }
+
+    .profile-about-grid .profile-field--full {
+      grid-column: 1 / -1;
     }
 
     .profile-position-row {
@@ -437,26 +524,28 @@
     }
 
     .tag-pending {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: var(--pending-bg);
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(255, 224, 130, 0.55);
       font-size: 11px;
       font-weight: 700;
-      color: var(--text);
+      color: #7a5a00;
+      letter-spacing: 0.02em;
     }
 
     .side-card__title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text);
       margin-bottom: 16px;
+      letter-spacing: -0.01em;
     }
 
     .side-card__title--blue {
       color: var(--blue);
-      text-decoration: underline;
-      text-underline-offset: 4px;
+      text-decoration: none;
     }
 
     .stat-list { list-style: none; }
@@ -465,40 +554,53 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 0;
-      font-size: 14px;
+      gap: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
       font-weight: 500;
-      color: var(--text);
-      border-bottom: 1px solid rgba(68, 138, 255, 0.08);
+      color: var(--muted);
+      background: var(--input-bg);
+      border-radius: 12px;
+      margin-bottom: 8px;
     }
 
-    .stat-list li:last-child { border-bottom: none; }
+    .stat-list li:last-child { margin-bottom: 0; }
 
     .stat-list__value {
-      font-weight: 700;
-      color: var(--text);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--blue);
+      min-width: 28px;
+      text-align: right;
     }
 
     .activity-list { list-style: none; }
 
     .activity-list li {
       position: relative;
-      padding: 8px 0 8px 18px;
+      padding: 10px 0 10px 22px;
       font-size: 13px;
       font-weight: 500;
       color: var(--text);
       line-height: 1.45;
+      border-bottom: 1px solid rgba(68, 138, 255, 0.08);
+    }
+
+    .activity-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
     }
 
     .activity-list li::before {
       content: '';
       position: absolute;
       left: 0;
-      top: 14px;
+      top: 16px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--blue);
+      box-shadow: 0 0 0 3px rgba(68, 138, 255, 0.15);
     }
 
     .settings-row {
@@ -506,32 +608,41 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--input-bg);
     }
 
     .settings-row__label {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 600;
       color: var(--text);
     }
 
     .btn-change {
       padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background: var(--blue);
-      color: #fff;
+      border: 1.5px solid rgba(68, 138, 255, 0.35);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--blue);
       font-family: var(--font);
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .btn-change:hover { background: var(--blue-dark); }
+    .btn-change:hover {
+      background: rgba(68, 138, 255, 0.08);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
 
     @media (max-width: 1024px) {
       .profile-grid { grid-template-columns: 1fr; }
+      .profile-fields-grid,
+      .profile-about-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 900px) {
@@ -540,10 +651,13 @@
       .sidebar__collapse, .sidebar__toggle { display: none !important; }
       .sidebar__spacer, .nav--bottom { display: none; }
       .main { padding: 24px 20px 40px; }
-      .profile-banner { height: 140px; }
-      .profile-banner__cover { width: 220px; height: 80px; }
+      .profile-hero { margin-bottom: 72px; }
+      .profile-banner { height: 150px; border-radius: 16px; }
+      .profile-hero__identity { left: 20px; bottom: -44px; }
+      .profile-avatar { width: 88px; height: 88px; }
     }
   </style>
+  <link rel="stylesheet" href="site-tour.css">
 </head>
 <body>
   <div class="app">
@@ -595,70 +709,80 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
           </a>
           <button type="button" class="tool-btn tool-btn--help" aria-label="Help">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.028-.94-.585 0-1.01.388-1.01.94z"/></svg>
           </button>
         </div>
       </div>
 
-      <section class="profile-banner" id="profile-banner" aria-label="Profile cover photo">
-        <div class="profile-banner__cover" id="profile-banner-default" role="img" aria-label="Cover banner">
-          <span class="profile-banner__cover-text">PokeMo yan!</span>
+      <div class="profile-hero" id="profile-hero">
+        <section class="profile-banner" id="profile-banner" aria-label="Profile cover photo">
+          <div class="profile-banner__cover" id="profile-banner-default" role="img" aria-label="Cover banner"></div>
+          <button type="button" class="profile-banner__upload" id="banner-upload-btn">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Cover photo
+          </button>
+          <input type="file" class="profile-upload-input" id="banner-photo-input" accept="image/*" aria-hidden="true" tabindex="-1">
+        </section>
+
+        <div class="profile-hero__identity">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar profile-avatar--placeholder" id="profile-avatar" role="img" aria-label="Profile photo">🐱</div>
+            <button type="button" class="profile-avatar__upload" id="avatar-upload-btn" aria-label="Upload profile photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </button>
+            <input type="file" class="profile-upload-input" id="avatar-photo-input" accept="image/*" aria-hidden="true" tabindex="-1">
+          </div>
         </div>
-        <button type="button" class="profile-banner__upload" id="banner-upload-btn">Upload Photo</button>
-        <input type="file" class="profile-upload-input" id="banner-photo-input" accept="image/*" aria-hidden="true" tabindex="-1">
-      </section>
+      </div>
 
       <div class="profile-grid">
         <section class="profile-card profile-card--main" aria-label="Profile details">
-          <button type="button" class="btn-upload btn-upload--card" id="avatar-upload-btn">Upload Photo</button>
-          <input type="file" class="profile-upload-input" id="avatar-photo-input" accept="image/*" aria-hidden="true" tabindex="-1">
-
-          <div class="profile-avatar-row">
-            <div class="profile-avatar profile-avatar--placeholder" id="profile-avatar" role="img" aria-label="Profile photo">🐱</div>
-          </div>
-
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-name">Your Name</label>
-            <input class="profile-field__input" type="text" id="profile-name" data-field="name" value="First Name Last Name" placeholder="First Name Last Name">
-          </div>
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-email">School Email</label>
-            <input class="profile-field__input" type="email" id="profile-email" data-field="email" value="school@sdca.edu.ph" placeholder="school@sdca.edu.ph">
-          </div>
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-student-number">Student Number</label>
-            <input class="profile-field__input" type="text" id="profile-student-number" data-field="studentNumber" value="0000-00000" placeholder="0000-00000">
+          <div class="profile-fields-grid">
+            <div class="profile-field">
+              <label class="profile-field__label" for="profile-name">Your Name</label>
+              <input class="profile-field__input" type="text" id="profile-name" data-field="name" value="First Name Last Name" placeholder="First Name Last Name">
+            </div>
+            <div class="profile-field">
+              <label class="profile-field__label" for="profile-email">School Email</label>
+              <input class="profile-field__input" type="email" id="profile-email" data-field="email" value="school@sdca.edu.ph" placeholder="school@sdca.edu.ph">
+            </div>
+            <div class="profile-field profile-field--full">
+              <label class="profile-field__label" for="profile-student-number">Student Number</label>
+              <input class="profile-field__input" type="text" id="profile-student-number" data-field="studentNumber" value="0000-00000" placeholder="0000-00000">
+            </div>
           </div>
 
           <h2 class="profile-section-title" id="profile-about-title">About First Name</h2>
 
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-course">Course</label>
-            <input class="profile-field__input" type="text" id="profile-course" data-field="course" value="BSIT" placeholder="BSIT">
-          </div>
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-department">School/Department</label>
-            <input class="profile-field__input" type="text" id="profile-department" data-field="department" value="SCMCS" placeholder="SCMCS">
-          </div>
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-organization">Organization</label>
-            <input class="profile-field__input" type="text" id="profile-organization" data-field="organization" value="None" placeholder="None">
-          </div>
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-org-role">Organization Role</label>
-            <input class="profile-field__input" type="text" id="profile-org-role" data-field="orgRole" value="None" placeholder="None">
-          </div>
-          <div class="profile-field">
-            <label class="profile-field__label" for="profile-org-position">Organization Position</label>
-            <div class="profile-position-row">
-              <input class="profile-field__input" type="text" id="profile-org-position" data-field="orgPosition" value="Organization Position" placeholder="Organization Position">
-              <span class="tag-pending">Pending</span>
+          <div class="profile-about-grid">
+            <div class="profile-field">
+              <label class="profile-field__label" for="profile-course">Course</label>
+              <input class="profile-field__input" type="text" id="profile-course" data-field="course" value="BSIT" placeholder="BSIT">
+            </div>
+            <div class="profile-field">
+              <label class="profile-field__label" for="profile-department">School/Department</label>
+              <input class="profile-field__input" type="text" id="profile-department" data-field="department" value="SCMCS" placeholder="SCMCS">
+            </div>
+            <div class="profile-field">
+              <label class="profile-field__label" for="profile-organization">Organization</label>
+              <input class="profile-field__input" type="text" id="profile-organization" data-field="organization" value="None" placeholder="None">
+            </div>
+            <div class="profile-field">
+              <label class="profile-field__label" for="profile-org-role">Organization Role</label>
+              <input class="profile-field__input" type="text" id="profile-org-role" data-field="orgRole" value="None" placeholder="None">
+            </div>
+            <div class="profile-field profile-field--full">
+              <label class="profile-field__label" for="profile-org-position">Organization Position</label>
+              <div class="profile-position-row">
+                <input class="profile-field__input" type="text" id="profile-org-position" data-field="orgPosition" value="Organization Position" placeholder="Organization Position">
+                <span class="tag-pending">Pending</span>
+              </div>
             </div>
           </div>
 
           <div class="profile-save-row">
             <span class="profile-save-hint" id="profile-save-hint" aria-live="polite"></span>
-            <button type="button" class="btn-save-profile" id="save-profile-btn">Save Changes</button>
+            <button type="button" class="btn-save-profile" id="save-profile-btn">Edit</button>
           </div>
         </section>
 
@@ -745,7 +869,26 @@
       var aboutTitleEl = document.getElementById('profile-about-title');
       var saveBtn = document.getElementById('save-profile-btn');
       var saveHint = document.getElementById('profile-save-hint');
+      var profileHero = document.getElementById('profile-hero');
+      var profileMainCard = document.querySelector('.profile-card--main');
       var saveHintTimer;
+      var isEditing = false;
+
+      function setEditMode(editing) {
+        isEditing = editing;
+        profileMainCard.classList.toggle('is-editing', editing);
+        profileHero.classList.toggle('is-editing', editing);
+        profileInputs.forEach(function (input) {
+          input.readOnly = !editing;
+        });
+        saveBtn.textContent = editing ? 'Save' : 'Edit';
+        saveBtn.classList.toggle('is-editing', editing);
+        saveBtn.setAttribute('aria-pressed', editing ? 'true' : 'false');
+        if (!editing) {
+          saveHint.textContent = '';
+          saveHint.classList.remove('is-saved');
+        }
+      }
 
       function getFirstName(fullName) {
         var parts = String(fullName || '').trim().split(/\s+/);
@@ -804,18 +947,24 @@
 
       profileInputs.forEach(function (input) {
         input.addEventListener('input', function () {
+          if (!isEditing) return;
           if (input.getAttribute('data-field') === 'name') updateAboutTitle();
-        });
-        input.addEventListener('change', function () {
-          saveProfileInfo(false);
         });
       });
 
       saveBtn.addEventListener('click', function () {
+        if (!isEditing) {
+          setEditMode(true);
+          var firstInput = profileInputs[0];
+          if (firstInput) firstInput.focus();
+          return;
+        }
         saveProfileInfo(true);
+        setEditMode(false);
       });
 
       loadProfileInfo();
+      setEditMode(false);
 
       function applyBannerImage(dataUrl) {
         bannerEl.style.backgroundImage = 'url("' + dataUrl + '")';
@@ -876,5 +1025,6 @@
       } catch (err) { /* ignore */ }
     })();
   </script>
+  <script src="site-tour.js"></script>
 </body>
 </html>

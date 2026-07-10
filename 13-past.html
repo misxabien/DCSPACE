@@ -48,6 +48,10 @@
     .tool-btn { width: 40px; height: 40px; border: none; border-radius: 50%; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--blue); transition: background 0.15s ease; }
     .tool-btn:hover { background: rgba(68, 138, 255, 0.1); }
     .tool-btn--avatar { background: #c5d9fc; }
+
+    .tool-btn--help { background: #c5d9fc; color: #fff; }
+    .tool-btn--help:hover { background: #b5cffc; color: #fff; }
+    .tool-btn--help svg { width: 22px; height: 22px; flex-shrink: 0; }
     .tool-btn svg { width: 22px; height: 22px; }
     .search-bar { display: flex; align-items: center; gap: 0; margin-bottom: 20px; }
     .search-bar__field { flex: 1; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 16px; background: #fff; border: 1px solid #d0d0d0; border-radius: 10px 0 0 10px; border-right: none; }
@@ -61,21 +65,22 @@
     .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
     .section-head { margin-bottom: 16px; }
     .section-head h2 { font-size: 17px; font-weight: 700; color: var(--text); }
-    .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-    .event-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: background 0.18s ease, box-shadow 0.18s ease; }
-    .event-card:hover { background: var(--card-hover); box-shadow: 0 4px 16px rgba(68, 138, 255, 0.12); }
-    .event-card__media { position: relative; height: 100px; background: linear-gradient(135deg, #e8eef8 0%, #d4e2f7 100%); border-bottom: 1px solid rgba(68, 138, 255, 0.2); }
+    .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+    .event-card { display: flex; flex-direction: column; min-height: 224px; height: 100%; background: #fff; border: 1.5px solid transparent; border-radius: 16px; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 40, 90, 0.08); transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease; }
+    .event-card:hover { border-color: var(--blue); box-shadow: 0 12px 30px rgba(68, 138, 255, 0.16); transform: translateY(-2px); }
+    .event-card__media { position: relative; height: 108px; flex-shrink: 0; background: linear-gradient(135deg, #e8eef8 0%, #d4e2f7 100%); border-bottom: 1px solid rgba(68, 138, 255, 0.12); }
     .event-card__bookmark { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.9); color: var(--blue); cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .event-card__bookmark svg { width: 16px; height: 16px; }
-    .event-card__body { display: flex; gap: 16px; padding: 14px 16px 16px; border-top: 1px solid rgba(68, 138, 255, 0.15); }
+    .event-card__body { display: flex; gap: 16px; flex: 1; padding: 14px 16px 16px; }
     .event-card__date { flex-shrink: 0; width: 56px; text-align: center; font-weight: 700; line-height: 1.1; }
     .event-card__date-month { display: block; font-size: 11px; text-transform: uppercase; color: var(--text); letter-spacing: 0.04em; }
     .event-card__date-day { display: block; font-size: 28px; color: var(--blue); line-height: 1; margin: 2px 0; }
     .event-card__date-year { display: block; font-size: 11px; color: var(--muted); font-weight: 600; }
-    .event-card__info { flex: 1; min-width: 0; }
-    .event-card__name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-    .event-card__venue { font-size: 12px; font-weight: 600; color: var(--blue); margin-bottom: 2px; }
-    .event-card__time { font-size: 12px; color: var(--muted); }
+    .event-card__info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .event-card__name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .event-card__venue { font-size: 12px; font-weight: 600; color: var(--blue); margin: 0; }
+    .event-card__time { font-size: 12px; color: var(--muted);
+      margin: 0; margin: 0; }
     @media (max-width: 900px) {
       .app { flex-direction: column; }
       .sidebar { width: 100%; min-height: auto; flex-direction: row; flex-wrap: wrap; padding: 20px; }
@@ -92,6 +97,7 @@
       .main { padding: 24px 20px 40px; }
     }
   </style>
+  <link rel="stylesheet" href="site-tour.css">
 </head>
 <body>
   <div class="app">
@@ -170,7 +176,7 @@
         <div class="main__tools">
           <a class="tool-btn tool-btn--avatar" href="./36-profile.html" aria-label="Profile"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/></svg></a>
           <a class="tool-btn" href="./37-notif.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></a>
-          <button type="button" class="tool-btn" aria-label="Help" style="background: var(--blue); color: #fff;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></button>
+          <button type="button" class="tool-btn tool-btn--help" aria-label="Help"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.028-.94-.585 0-1.01.388-1.01.94z"/></svg></button>
         </div>
       </div>
       <div class="search-bar">
@@ -213,5 +219,6 @@
       });
     })();
   </script>
+  <script src="site-tour.js"></script>
 </body>
 </html>

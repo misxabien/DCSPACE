@@ -9,46 +9,61 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --sidebar-bg: #DAE4F8; --main-bg: #FFFCF8; --blue: #448AFF; --text: #1a1a1a; --muted: #6b6b6b; --card-hover: #FFEED5; --sidebar-width: 248px; --font: 'Montserrat', sans-serif; }
+    :root { --sidebar-bg: #DAE4F8; --main-bg: #FFFCF8; --blue: #448AFF; --blue-dark: #3a7aee; --text: #1a1a1a; --muted: #6b6b6b; --border: #448AFF; --card-hover: #FFEED5; --sidebar-width: 248px; --font: 'Montserrat', sans-serif; }
     html, body { height: 100%; }
-    body { font-family: var(--font); background: var(--main-bg); color: var(--text); }
+    body { font-family: var(--font); background: var(--main-bg); color: var(--text); -webkit-font-smoothing: antialiased; }
     .app { display: flex; min-height: 100vh; }
-    .sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); padding: 28px 20px 32px; display: flex; flex-direction: column; }
-    .sidebar__brand { display: flex; flex-direction: column; align-items: center; margin-bottom: 36px; }
-    .sidebar__logo { width: 120px; filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%); }
-    .sidebar__title { font-size: 15px; font-weight: 800; color: var(--blue); }
+    .sidebar { width: var(--sidebar-width); flex-shrink: 0; background: var(--sidebar-bg); display: flex; flex-direction: column; padding: 28px 20px 32px; min-height: 100vh; position: relative; }
+    .sidebar__brand { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 36px; }
+    .sidebar__logo { width: 120px; filter: brightness(0) saturate(100%) invert(59%) sepia(92%) saturate(2775%) hue-rotate(196deg) brightness(101%) contrast(101%); margin-bottom: 4px; }
+    .sidebar__title { font-size: 15px; font-weight: 800; color: var(--blue); letter-spacing: 0.06em; }
     .nav { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .nav a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--blue); font-size: 14px; font-weight: 600; text-decoration: none; }
     .nav a svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
     .nav a.is-active { background: var(--blue); color: #fff; }
     .nav a.is-active svg { stroke: #fff; }
     .sidebar__spacer { flex: 1; }
-    .main { flex: 1; padding: 32px 40px 48px; }
-    .main__greeting { font-size: 2rem; font-weight: 700; color: var(--blue); margin-bottom: 24px; }
+    .nav--bottom { margin-top: auto; padding-top: 16px; }
+    .main { flex: 1; min-width: 0; overflow-y: auto; padding: 32px 40px 48px; }
+    .main__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .main__greeting { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 700; color: var(--blue); }
+    .main__tools { display: flex; gap: 14px; }
+    .tool-btn { width: 40px; height: 40px; border: none; border-radius: 50%; color: var(--blue); display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
+    .tool-btn--avatar { background: #c5d9fc; }
+    .tool-btn--help { background: #c5d9fc; color: #fff; }
+    .tool-btn--help:hover { background: #b5cffc; color: #fff; }
+    .tool-btn--help svg { width: 22px; height: 22px; flex-shrink: 0; }
     .search-bar { display: flex; margin-bottom: 24px; }
-    .search-bar__field { flex: 1; height: 44px; padding: 0 16px; background: #fff; border: 1px solid #d0d0d0; border-radius: 10px 0 0 10px; display: flex; align-items: center; }
-    .search-bar__field input { flex: 1; border: none; outline: none; font-family: var(--font); }
+    .search-bar__field { flex: 1; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 16px; background: #fff; border: 1px solid #d0d0d0; border-radius: 10px 0 0 10px; border-right: none; }
+    .search-bar__field input { flex: 1; border: none; outline: none; font-family: var(--font); font-size: 14px; }
     .search-bar__filter { width: 48px; height: 44px; border: none; border-radius: 0 10px 10px 0; background: linear-gradient(180deg, #f5c842 0%, #e8a832 100%); cursor: pointer; }
-    .back-btn { display: inline-flex; margin-bottom: 20px; color: var(--blue); font-weight: 600; text-decoration: none; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--blue); font-size: 14px; font-weight: 600; text-decoration: none; }
     .section-head h2 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
-    .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
     .saved-empty { font-size: 13px; color: var(--muted); }
     .saved-empty[hidden] { display: none; }
-    .event-card { background: #fff; border: 1px solid #448AFF; border-radius: 12px; overflow: hidden; cursor: pointer; }
-    .event-card:hover { background: var(--card-hover); }
-    .event-card__media { height: 100px; background: linear-gradient(135deg, #e8eef8 0%, #d4e2f7 100%); position: relative; }
-    .event-card__bookmark { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border: none; border-radius: 50%; background: #fff; color: #448AFF; cursor: pointer; }
-    .event-card__body { display: flex; gap: 16px; padding: 14px 16px; }
-    .event-card__date-day { font-size: 28px; color: #448AFF; font-weight: 700; }
-    .event-card__name { font-size: 14px; font-weight: 700; }
-    .event-card__venue { font-size: 12px; color: #448AFF; font-weight: 600; }
+    .event-card { display: flex; flex-direction: column; min-height: 224px; height: 100%; background: #fff; border: 1.5px solid transparent; border-radius: 16px; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 40, 90, 0.08); transition: border-color 0.18s ease, box-shadow 0.18s ease; }
+    .event-card:hover { border-color: var(--blue); box-shadow: 0 12px 30px rgba(68, 138, 255, 0.16); }
+    .event-card__media { position: relative; height: 108px; flex-shrink: 0; background: linear-gradient(135deg, #e8eef8 0%, #d4e2f7 100%); border-bottom: 1px solid rgba(68, 138, 255, 0.12); }
+    .event-card__bookmark { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.9); color: var(--blue); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .event-card__bookmark svg { width: 16px; height: 16px; }
+    .event-card__body { display: flex; gap: 16px; flex: 1; padding: 14px 16px 16px; }
+    .event-card__date { flex-shrink: 0; width: 56px; text-align: center; font-weight: 700; line-height: 1.1; }
+    .event-card__date-month { display: block; font-size: 11px; text-transform: uppercase; color: var(--text); letter-spacing: 0.04em; }
+    .event-card__date-day { display: block; font-size: 28px; color: var(--blue); line-height: 1; margin: 2px 0; }
+    .event-card__date-year { display: block; font-size: 11px; color: var(--muted); font-weight: 600; }
+    .event-card__info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .event-card__name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .event-card__venue { font-size: 12px; font-weight: 600; color: var(--blue); margin: 0; }
+    .event-card__time { font-size: 12px; color: var(--muted); margin: 0; }
     @media (max-width: 900px) { .event-grid { grid-template-columns: 1fr; } }
   </style>
+  <link rel="stylesheet" href="site-tour.css">
 </head>
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="sidebar__brand"><img src="finallogo.png" alt="DC Space" class="sidebar__logo"><span class="sidebar__title">DC SPACE</span></div>
+      <div class="sidebar__brand"><img src="finallogo.png" alt="DC Space" class="sidebar__logo" width="120"><span class="sidebar__title">DC SPACE</span></div>
       <nav><ul class="nav">
         <li><a href="./09-home.html"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9.5z"/></svg>Home</a></li>
         <li><a href="./14-event.html"><svg viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Events</a></li>
@@ -57,9 +72,16 @@
         <li><a href="./26-certificates.html"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Certificates</a></li>
       </ul></nav>
       <div class="sidebar__spacer"></div>
+      <ul class="nav nav--bottom"><li><a href="./01-login.html"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log out</a></li></ul>
     </aside>
     <main class="main">
-      <h1 class="main__greeting">Saved Events</h1>
+      <div class="main__top">
+        <h1 class="main__greeting">Saved Events</h1>
+        <div class="main__tools">
+          <a class="tool-btn tool-btn--avatar" href="./36-profile.html" aria-label="Profile"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/></svg></a>
+          <button type="button" class="tool-btn tool-btn--help" aria-label="Help"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.028-.94-.585 0-1.01.388-1.01.94z"/></svg></button>
+        </div>
+      </div>
       <div class="search-bar"><div class="search-bar__field"><input type="search" placeholder="Search" aria-label="Search past saved events"></div><button type="button" class="search-bar__filter" aria-label="Filter"></button></div>
       <a class="back-btn" href="./29-saved.html">← Back to Saved Events</a>
       <section class="section-head"><h2>Past Events</h2></section>
@@ -79,5 +101,6 @@
       window.addEventListener('dc-saved-changed', render);
     })();
   </script>
+  <script src="site-tour.js"></script>
 </body>
 </html>

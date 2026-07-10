@@ -195,7 +195,9 @@
     }
 
     .tool-btn--avatar { background: #c5d9fc; }
-    .tool-btn--help { background: var(--blue); color: #fff; }
+    .tool-btn--help { background: #c5d9fc; color: #fff; }
+    .tool-btn--help:hover { background: #b5cffc; color: #fff; }
+    .tool-btn--help svg { width: 22px; height: 22px; flex-shrink: 0; }
     .tool-btn svg { width: 22px; height: 22px; }
 
     .detail-hero {
@@ -465,6 +467,7 @@
       .rfid-panel__footer { padding-left: 16px; padding-right: 16px; }
     }
   </style>
+  <link rel="stylesheet" href="site-tour.css">
 </head>
 <body>
   <div class="app">
@@ -547,7 +550,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
           </a>
           <button type="button" class="tool-btn tool-btn--help" aria-label="Help">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.028-.94-.585 0-1.01.388-1.01.94z"/></svg>
           </button>
         </div>
       </header>
@@ -668,5 +671,6 @@
       });
     })();
   </script>
+  <script src="site-tour.js"></script>
 </body>
 </html>

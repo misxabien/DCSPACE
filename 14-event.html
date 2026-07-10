@@ -24,7 +24,6 @@
       --text: #1a1a1a;
       --muted: #6b6b6b;
       --border: #448AFF;
-      --card-hover: #FFEED5;
       --sidebar-width: 248px;
       --font: 'Montserrat', sans-serif;
     }
@@ -315,10 +314,9 @@
       background: #c5d9fc;
     }
 
-    .tool-btn--help {
-      background: var(--blue);
-      color: #fff;
-    }
+    .tool-btn--help { background: #c5d9fc; color: #fff; }
+    .tool-btn--help:hover { background: #b5cffc; color: #fff; }
+    .tool-btn--help svg { width: 22px; height: 22px; flex-shrink: 0; }
 
     .tool-btn svg {
       width: 22px;
@@ -328,26 +326,24 @@
     .search-bar {
       position: relative;
       z-index: 1;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 4px 0;
     }
 
     .search-bar__field {
-      flex: 1;
+      width: 100%;
       display: flex;
       align-items: center;
-      gap: 12px;
-      height: 46px;
-      padding: 0 20px;
+      gap: 10px;
+      height: 40px;
+      padding: 0 18px;
       background: rgba(68, 138, 255, 0.12);
       border: 1px solid rgba(68, 138, 255, 0.22);
       border-radius: 999px;
     }
 
     .search-bar__field svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       color: var(--blue);
       flex-shrink: 0;
       opacity: 0.7;
@@ -358,7 +354,7 @@
       border: none;
       outline: none;
       font-family: var(--font);
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text);
       background: transparent;
     }
@@ -366,30 +362,6 @@
     .search-bar__field input::placeholder {
       color: rgba(68, 138, 255, 0.55);
       font-weight: 500;
-    }
-
-    .search-bar__filter {
-      width: 46px;
-      height: 46px;
-      border: none;
-      border-radius: 10px;
-      background: #f5c842;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.15s ease;
-    }
-
-    .search-bar__filter:hover {
-      background: #e8b82e;
-    }
-
-    .search-bar__filter svg {
-      width: 20px;
-      height: 20px;
-      stroke: #1a1a1a;
     }
 
     /* ── Explore sections ── */
@@ -412,7 +384,7 @@
     .section-head h2 {
       font-size: 18px;
       font-weight: 700;
-      color: var(--blue);
+      color: var(--text);
     }
 
     .section-head__more {
@@ -444,43 +416,43 @@
       display: flex;
       gap: 20px;
       overflow-x: auto;
-      padding-bottom: 6px;
+      padding: 8px 0 14px;
       scroll-snap-type: x proximity;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(68, 138, 255, 0.35) transparent;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
     .event-row::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .event-row::-webkit-scrollbar-thumb {
-      background: rgba(68, 138, 255, 0.35);
-      border-radius: 3px;
+      display: none;
     }
 
     /* ── Event card ── */
     .event-card {
       flex: 0 0 272px;
       scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      min-height: 224px;
       background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      border: 1.5px solid transparent;
+      border-radius: 16px;
       overflow: hidden;
       cursor: pointer;
-      transition: background 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 8px 24px rgba(0, 40, 90, 0.08);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
     }
 
     .event-card:hover {
-      background: var(--card-hover);
-      box-shadow: 0 4px 16px rgba(68, 138, 255, 0.12);
+      border-color: var(--blue);
+      box-shadow: 0 12px 30px rgba(68, 138, 255, 0.16);
     }
 
     .event-card__media {
       position: relative;
-      height: 110px;
-      background: #fff;
-      border-bottom: 1px solid rgba(68, 138, 255, 0.15);
+      height: 108px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #e8eef8 0%, #d4e2f7 100%);
+      border-bottom: 1px solid rgba(68, 138, 255, 0.12);
     }
 
     .event-card__bookmark {
@@ -491,13 +463,12 @@
       height: 28px;
       border: none;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.9);
       color: var(--blue);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 1px 4px rgba(68, 138, 255, 0.15);
     }
 
     .event-card__bookmark svg {
@@ -507,13 +478,14 @@
 
     .event-card__body {
       display: flex;
-      gap: 14px;
+      gap: 16px;
+      flex: 1;
       padding: 14px 16px 16px;
     }
 
     .event-card__date {
       flex-shrink: 0;
-      width: 52px;
+      width: 56px;
       text-align: center;
       font-weight: 700;
       line-height: 1.1;
@@ -545,28 +517,33 @@
     .event-card__info {
       flex: 1;
       min-width: 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .event-card__name {
       font-size: 14px;
       font-weight: 700;
-      color: var(--blue);
+      color: var(--text);
       margin-bottom: 6px;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .event-card__venue {
       font-size: 12px;
       font-weight: 600;
       color: var(--blue);
-      opacity: 0.85;
-      margin-bottom: 2px;
+      margin: 0;
     }
 
     .event-card__time {
       font-size: 12px;
-      color: var(--blue);
-      opacity: 0.7;
-      font-weight: 500;
+      color: var(--muted);
+      margin: 0;
     }
 
     @media (max-width: 900px) {
@@ -639,6 +616,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="site-tour.css">
 </head>
 <body>
   <div class="app">
@@ -730,7 +708,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
             </a>
             <button type="button" class="tool-btn tool-btn--help" aria-label="Help">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.028-.94-.585 0-1.01.388-1.01.94z"/></svg>
             </button>
           </div>
         </div>
@@ -740,9 +718,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
             <input type="search" placeholder="Search" aria-label="Search events">
           </div>
-          <button type="button" class="search-bar__filter" aria-label="Filter and sort">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4"/></svg>
-          </button>
         </div>
       </header>
 
@@ -822,5 +797,6 @@
       });
     })();
   </script>
+  <script src="site-tour.js"></script>
 </body>
 </html>
